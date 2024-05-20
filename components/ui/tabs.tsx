@@ -1,20 +1,19 @@
 'use client'
 
 import * as React from 'react'
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 
 import { cn } from '@/lib/utils'
 
 const Tabs = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ElementRef<typeof TabsPrimitive.Root>,
   TabsPrimitive.TabsProps & { defaultTab?: string; children?: React.ReactNode }
 >(({ defaultTab, ...props }, ref) => {
-  // const searchParams = useSearchParams()
-  // const tab = searchParams.get('tab') ?? defaultTab
   return <TabsPrimitive.Root ref={ref} {...props} />
 })
-// const Tabs = TabsPrimitive.Root
+
+Tabs.displayName = TabsPrimitive.Root.displayName
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
