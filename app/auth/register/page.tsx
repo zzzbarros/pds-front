@@ -12,11 +12,9 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  TabsContent,
   useToast,
 } from '@/components/ui'
 import { services } from '@/services/api'
-import { AUTH_TAB_ENUM } from '../enums'
 
 type FormProps = z.input<typeof schema>
 
@@ -68,16 +66,19 @@ export default function RegisterPage() {
 
   if (form.formState.isSubmitSuccessful)
     return (
-      <TabsContent value={AUTH_TAB_ENUM.REGISTER} className='w-full text-center' tabIndex={-1}>
-        <h1 className='text-2xl text-primary-medium font-bold'>Crie sua conta</h1>
+      <div className='w-full text-center'>
+        <h1 className='text-2xl text-primary-medium font-bold'>Verifique seu E-mail</h1>
         <p className='mt-[6px] mb-6 text-zinc-500 font-medium'>
-          Insira seu e-mail para continuar com a criação do usuário.
+          Enviamos para seu e-mail a confirmação dos próximos passos...
         </p>
-      </TabsContent>
+        <p className='mt-[6px] mb-6 text-zinc-500 font-medium'>
+          E-mail: <span className='font-bold text-lg'>{form.watch('email')}</span>.
+        </p>
+      </div>
     )
 
   return (
-    <TabsContent value={AUTH_TAB_ENUM.REGISTER} className='w-full text-center' tabIndex={-1}>
+    <section className='w-full text-center' tabIndex={-1}>
       <h1 className='text-2xl text-primary-medium font-bold'>Crie sua conta</h1>
       <p className='mt-[6px] mb-6 text-zinc-500 font-medium'>
         Insira seu e-mail para continuar com a criação do usuário.
@@ -110,6 +111,6 @@ export default function RegisterPage() {
           </Button>
         </form>
       </Form>
-    </TabsContent>
+    </section>
   )
 }
