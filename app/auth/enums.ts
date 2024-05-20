@@ -1,4 +1,4 @@
-export enum AUTH_TAB_ENUM {
-  REGISTER = 'register',
-  LOGIN = 'login',
+export enum AuthTabEnum {
+  REGISTER = '/auth/register',
+  LOGIN = '/auth/login',
 }
