@@ -52,14 +52,28 @@ class API {
     login: async (data: {
       email: string
       password: string
-    }): Promise<{ ok: boolean; title?: string; message?: string }> => {
+    }): Promise<{
+      ok: boolean
+      title?: string
+      message?: string
+      data?: {
+        token: string
+        refreshToken: string
+        user: {
+          name: string
+          uuid: string
+          type: string
+        }
+      }
+    }> => {
       try {
         const res = await fetch(this.baseUrl.concat('auth/login'), {
           method: 'POST',
           headers: this.headers,
           body: JSON.stringify(data),
         })
-        return { ok: res.ok }
+        const response = await res.json()
+        return { ok: res.ok, data: response }
       } catch {
         return {
           ok: false,
