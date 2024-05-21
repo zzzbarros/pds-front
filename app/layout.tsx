@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { CookiesProvider } from 'next-client-cookies/server'
+import { Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui'
 import './globals.css'
@@ -19,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang='pt-br' suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-        {children}
+        <CookiesProvider>{children}</CookiesProvider>
         <Toaster />
       </body>
     </html>
