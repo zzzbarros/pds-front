@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Info } from 'lucide-react'
 import {
   Button,
   Form,
@@ -15,7 +16,6 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Icons,
   useToast,
 } from '@/components/ui'
 import { validator } from '@/lib/validator'
@@ -118,13 +118,16 @@ export default function CreatePassword() {
                         <Popover>
                           <PopoverTrigger className='flex items-center gap-1.5'>
                             {label}
-                            <Icons.Info />
+                            <Info size={16} />
                           </PopoverTrigger>
                           <PopoverContent>
                             <p className='font-semibold'>Deve conter:</p>
                             <ul className='list-disc px-4 py-1'>
-                              {info.map((data) => (
-                                <li key={data}>{data};</li>
+                              {info.map((data, index) => (
+                                <li key={data}>
+                                  {data}
+                                  {index !== info.length - 1 ? ';' : '.'}
+                                </li>
                               ))}
                             </ul>
                           </PopoverContent>
@@ -134,7 +137,12 @@ export default function CreatePassword() {
                       )}
                     </FormLabel>
                     <FormControl>
-                      <Input {...(!index && { autoFocus: true })} type='password' placeholder='********' {...field} />
+                      <Input
+                        {...field}
+                        {...(!index ? { autoFocus: true } : { autoComplete: 'current-password' })}
+                        type='password'
+                        placeholder='********'
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
