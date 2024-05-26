@@ -1,6 +1,6 @@
 import Image from 'next/image'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getCookies } from 'next-client-cookies/server'
 import {
   Avatar,
   AvatarFallback,
@@ -12,23 +12,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui'
 import { LogoutButton } from './components/logoutButton'
+import { getUser } from '../auth/get-user'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const cookies = getCookies()
-  const rawUser = cookies.get('user')
-
-  if (!rawUser) redirect('/auth/login')
-
-  const userCookie = JSON.parse(rawUser)
-
-  const token = userCookie?.token
-
-  if (!token) redirect('/auth/login')
+  const { user } = getUser()
 
   const userName = getUserName()
 
   function getUserName() {
-    const { user } = userCookie
     const name = user.name
     const [first, last] = name.split(' ')
     return { name, fallback: first[0]?.concat(last[0]) }

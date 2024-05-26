@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCookies } from 'next-client-cookies'
+import { setCookie } from 'cookies-next'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -43,7 +43,6 @@ const schema = z
 export default function LoginPage() {
   const router = useRouter()
   const { toast } = useToast()
-  const cookies = useCookies()
 
   const form = useForm<FormProps>({
     resolver: zodResolver(schema),
@@ -65,7 +64,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       if (res?.data) {
-        cookies.set('user', JSON.stringify(res.data))
+        setCookie('user', JSON.stringify(res.data))
         router.push('/dashboard')
       }
     } else {

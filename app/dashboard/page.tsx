@@ -1,9 +1,7 @@
-import { getCookies } from 'next-client-cookies/server'
+import { getUser } from '../auth/get-user'
 
 export default function AuthPage() {
-  const cookies = getCookies()
-  const user = cookies.get('user')!
-  const token = JSON.parse(user).token
+  const { token } = getUser()
 
   return (
     <section className='p-4'>

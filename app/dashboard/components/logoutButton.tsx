@@ -1,16 +1,15 @@
 'use client'
 
-import { useCookies } from 'next-client-cookies'
+import { deleteCookie } from 'cookies-next'
 import { DropdownMenuItem } from '@/components/ui'
 import { useRouter } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 
 export function LogoutButton() {
-  const cookies = useCookies()
   const router = useRouter()
 
   function logout() {
-    cookies.remove('user')
+    deleteCookie('user')
     router.push('/auth/login')
   }
 
