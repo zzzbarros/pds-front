@@ -25,6 +25,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui'
+import revalidateTag from '@/lib/revalidateAction'
+import { Plus } from 'lucide-react'
 
 type FormProps = z.input<typeof schema>
 type OutputFormProps = z.output<typeof schema>
@@ -82,6 +84,7 @@ export function Create() {
       })
     } else {
       form.reset({})
+      revalidateTag('athletes')
       startTransition(() => {
         setOpenDrawer(false)
         toast({
@@ -95,7 +98,10 @@ export function Create() {
   return (
     <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
       <DrawerTrigger asChild>
-        <Button className='px-10'>Cadastrar atleta</Button>
+        <Button className='px-10'>
+          <Plus />
+          Cadastrar atleta
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-2'>
@@ -106,7 +112,11 @@ export function Create() {
             </DrawerDescription>
           </DrawerHeader>
           <Form {...form}>
-            <form id='athlete' onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-6 text-left px-4'>
+            <form
+              id='athlete'
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='flex flex-col gap-6 text-left px-4 min-h-[480px]'
+            >
               <div className='flex flex-col gap-3'>
                 <FormField
                   control={form.control}
@@ -115,7 +125,7 @@ export function Create() {
                     <FormItem>
                       <FormLabel>Nome do Atleta</FormLabel>
                       <FormControl>
-                        <Input {...field} autoFocus placeholder='Digite o nome do completo...' className='max-w-80' />
+                        <Input {...field} autoFocus placeholder='Digite o nome do completo...' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -128,7 +138,7 @@ export function Create() {
                     <FormItem>
                       <FormLabel>E-mail</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder='Digite o e-mail...' className='max-w-80' />
+                        <Input {...field} placeholder='Digite o e-mail...' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -142,13 +152,7 @@ export function Create() {
                     <FormItem>
                       <FormLabel>Altura</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder='Adicione a altura do atleta...'
-                          className='max-w-80'
-                          type='number'
-                          step='0.1'
-                        />
+                        <Input {...field} placeholder='Adicione a altura do atleta...' type='number' step='0.1' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -161,13 +165,7 @@ export function Create() {
                     <FormItem>
                       <FormLabel>Peso</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder='Adicione o peso do atleta...'
-                          className='max-w-80'
-                          type='number'
-                          step='0.1'
-                        />
+                        <Input {...field} placeholder='Adicione o peso do atleta...' type='number' step='0.1' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -176,7 +174,7 @@ export function Create() {
               </div>
             </form>
           </Form>
-          <DrawerFooter className='flex flex-row justify-between'>
+          <DrawerFooter className='flex flex-row justify-between mb-4'>
             <DrawerClose className='w-fit'>
               <Button variant='outline'>Cancelar</Button>
             </DrawerClose>
