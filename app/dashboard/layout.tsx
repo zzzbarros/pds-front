@@ -1,6 +1,4 @@
 import Image from 'next/image'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import {
   Avatar,
   AvatarFallback,
@@ -10,6 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Sidebar,
 } from '@/components/ui'
 import { LogoutButton } from './components/logoutButton'
 import { getUser } from '../auth/get-user'
@@ -26,7 +25,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className='w-screen min-h-screen'>
+    <div className='w-full min-h-screen'>
       <header className='px-9 py-4 flex justify-between items-center border-b border-[#DEDFE3]'>
         <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
         <DropdownMenu>
@@ -46,7 +45,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      {children}
+      <div className='w-full h-full flex' style={{ height: 'calc(100vh - 80.8px)' }}>
+        <Sidebar />
+        <div className='w-full'>{children}</div>
+      </div>
     </div>
   )
 }
