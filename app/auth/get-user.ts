@@ -1,6 +1,17 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+enum UserRoleEnum {
+  COACH = 'coach',
+  ATHLETE = 'athlete',
+}
+
+interface UserProps {
+  uuid: string
+  name: string
+  type: UserRoleEnum
+}
+
 export function getUser() {
   const authCookie = cookies().get('user')
 
@@ -11,7 +22,7 @@ export function getUser() {
   if (!authData?.token) redirect('/auth/login')
 
   return {
-    token: authData.token,
-    user: authData.user,
+    token: authData.token as string,
+    user: authData.user as UserProps,
   }
 }
