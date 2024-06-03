@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,11 +6,19 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-
+  Skeleton,
 } from '@/components/ui'
+import List from './list'
 import { Create } from './create'
+import { SearchInput } from '@/components/ui/search-input'
 
-export default function AthleteList() {
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function AthleteList({ searchParams }: Props) {
+  const { page = '1', search = '' } = searchParams
+
   return (
     <section className='p-4 px-10'>
       <div className='flex flex-col gap-0.5'>
@@ -17,7 +26,7 @@ export default function AthleteList() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href='/auth'>Iniciar</BreadcrumbLink>
+              <BreadcrumbLink href='/dashboard'>Inicio</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -26,9 +35,19 @@ export default function AthleteList() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className='flex flex-row-reverse'>
+      <div className='pt-6 flex justify-between'>
+        <SearchInput placeholder='Procure pelo nome do atleta...' value={search as string} />
         <Create />
       </div>
+      <Suspense
+        fallback={
+          <div className='mt-6 w-full h-full flex justify-center items-center'>
+            <Skeleton className='w-full h-[200px] sm:h-[400px] rounded-md' />
+          </div>
+        }
+      >
+        <List page={page as string} search={search as string} />
+      </Suspense>
     </section>
   )
 }
