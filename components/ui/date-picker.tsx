@@ -24,14 +24,14 @@ export function DatePicker({ control, label, name, description }: Props) {
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className='flex flex-col gap-1'>
-          <FormLabel>{label}</FormLabel>
+        <FormItem className='flex flex-col '>
+          <FormLabel className='mb-1'>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
                   variant='outline'
-                  className={cn('w-72 md:w-80 pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                  className={cn('w-72 md:w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                 >
                   {field.value ? format(field.value, 'PPP', { locale: ptBR }) : <span>Selecione a data</span>}
                   <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
