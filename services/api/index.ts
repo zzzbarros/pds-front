@@ -83,6 +83,26 @@ class API {
       }
     },
   }
+
+  public athletes = {
+    create: async (data: any) => {
+      try {
+        const res = await fetch(this.baseUrl.concat('athletes'), {
+          method: 'POST',
+          headers: this.headers,
+          body: JSON.stringify(data),
+        })
+        const response = await res.json()
+        return { ok: res.ok, data: response }
+      } catch {
+        return {
+          ok: false,
+          title: 'Desculpe, parece que ocorreu um erro.',
+          message: 'Tente novamente em instantes...',
+        }
+      }
+    },
+  }
 }
 
 export const services = new API()
