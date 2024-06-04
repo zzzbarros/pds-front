@@ -45,9 +45,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <div className='w-full h-full flex' style={{ height: 'calc(100vh - 80.8px)' }}>
+      <div className='w-full h-full flex' style={{ minHeight: 'calc(100vh - 80.8px)' }}>
         <Sidebar />
-        <div className='w-full'>{children}</div>
+        <div className='w-full h-full'>{children}</div>
       </div>
     </div>
   )

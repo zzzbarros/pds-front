@@ -104,7 +104,7 @@ export function Create() {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-2'>
+        <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-1'>
           <DrawerHeader className='text-center'>
             <DrawerTitle>Cadastro de atleta</DrawerTitle>
             <DrawerDescription>
@@ -117,7 +117,7 @@ export function Create() {
               onSubmit={form.handleSubmit(onSubmit)}
               className='flex flex-col gap-6 text-left px-4 min-h-[480px]'
             >
-              <div className='flex flex-col gap-3'>
+              <div className='flex flex-col gap-2.5'>
                 <FormField
                   control={form.control}
                   name='name'

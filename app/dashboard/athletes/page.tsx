@@ -20,7 +20,7 @@ export default async function AthleteList({ searchParams }: Props) {
   const { page = '1', search = '' } = searchParams
 
   return (
-    <section className='p-4 px-10'>
+    <section className='w-full h-full p-4 px-10'>
       <div className='flex flex-col gap-0.5'>
         <h1 className='text-xl font-semibold'>Lista de Atletas</h1>
         <Breadcrumb>
