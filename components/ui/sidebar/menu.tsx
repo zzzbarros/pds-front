@@ -1,20 +1,22 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'
 
 interface Props {
-  href: string
+  href: string[]
   label: string
   icon: React.ReactNode
 }
 
 export function MenuButton({ href, label, icon }: Props) {
   const pathname = usePathname()
-  const isActive = pathname === href
+  const { id = '' } = useParams()
+  const isActive = href.map((route) => route.replace('[id]', id as string)).includes(pathname)
+
   return (
-    <Link href={href}>
+    <Link href={href[0]}>
       <li
         className={twMerge(
           'text-gray-600 hover:text-gray-800 text-nowrap flex items-center gap-2 hover:underline',

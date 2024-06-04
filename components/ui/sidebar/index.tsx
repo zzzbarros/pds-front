@@ -2,9 +2,9 @@ import { Bolt, Home, Users } from 'lucide-react'
 import { MenuButton } from './menu'
 
 const menus = [
-  { href: '/dashboard', label: 'Inicio', icon: <Home /> },
-  { href: '/dashboard/athletes', label: 'Atletas', icon: <Users /> },
-  { href: '/dashboard/training-types', label: 'Tipos de Treino', icon: <Bolt /> },
+  { href: ['/dashboard'], label: 'Inicio', icon: <Home /> },
+  { href: ['/dashboard/athletes', '/dashboard/athletes/[id]/planning'], label: 'Atletas', icon: <Users /> },
+  { href: ['/dashboard/training-types'], label: 'Tipos de Treino', icon: <Bolt /> },
 ]
 
 export function Sidebar() {
