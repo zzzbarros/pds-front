@@ -1,0 +1,287 @@
+'use client'
+
+import { startTransition, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { clientFetcher } from '@/services'
+import {
+  Button,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  useToast,
+  DatePicker,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  Slider,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui'
+import revalidateTag from '@/lib/revalidateAction'
+import { Info, Plus } from 'lucide-react'
+
+type FormProps = z.input<typeof schema>
+type OutputFormProps = z.output<typeof schema>
+
+const schema = z
+  .object({
+    date: z
+      .string()
+      .min(1, {
+        message: 'Data do Treino é obrigatório',
+      })
+      .default(''),
+    trainingType: z
+      .string()
+      .min(1, {
+        message: 'Tipo de Treino é obrigatório',
+      })
+      .default(''),
+    description: z.string().default(''),
+    duration: z.coerce
+      .number()
+      .min(1, {
+        message: 'Duração do Treino é obrigatório',
+      })
+      .default(0),
+    pse: z.coerce
+      .number()
+      .min(0, {
+        message: 'PSE Planejado é obrigatório',
+      })
+      .default(0),
+    serverError: z.string().default('').optional(),
+  })
+  .transform(({ date, trainingType, description, duration, pse }) => ({
+    date,
+    trainingType,
+    description,
+    duration,
+    pse,
+  }))
+
+export function PlanningForm() {
+  const { toast } = useToast()
+  const [openDrawer, setOpenDrawer] = useState(false)
+
+  const form = useForm<FormProps>({
+    resolver: zodResolver(schema),
+  })
+
+  async function onSubmit(data: FormProps) {
+    const res = await clientFetcher('planning-training', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) {
+      startTransition(() => {
+        toast({
+          title: res.data?.title || 'Ops parece que ocorreu um erro!',
+          description: res.data?.message || 'Tente novamente em instantes...',
+          variant: 'destructive',
+        })
+        form.setError('serverError', {})
+      })
+    } else {
+      form.reset({})
+      revalidateTag('planning-training')
+      startTransition(() => {
+        setOpenDrawer(false)
+        toast({
+          title: res.data.title,
+          description: res.data.message,
+        })
+      })
+    }
+  }
+
+  return (
+    <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
+      <DrawerTrigger asChild>
+        <Button className='px-10'>
+          <Plus />
+          Planejar Treino
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-1'>
+          <DrawerHeader className='text-center'>
+            <DrawerTitle>Planejamento de Treino</DrawerTitle>
+            <DrawerDescription>
+              Preencha os campos a seguir para cadastrar o planejamento de treino do atleta na plataforma.
+            </DrawerDescription>
+          </DrawerHeader>
+          <Form {...form}>
+            <form
+              id='athlete'
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='flex flex-col gap-6 text-left px-4 min-h-[480px] overflow-auto'
+            >
+              <div className='flex flex-col gap-3'>
+                <DatePicker control={form.control} name='date' label='Data do Treino' />
+                <FormField
+                  control={form.control}
+                  name='trainingType'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tipo de Treino</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder='Selecione o tipo de treino' />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value='m@example.com'>m@example.com</SelectItem>
+                            <SelectItem value='m@google.com'>m@google.com</SelectItem>
+                            <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='description'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{'Descrição'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder='Descreva o treinamento...' />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='duration'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{'Duração do treino (minutos)'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder='Insira o tempo de treino planejado...' type='number' />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='pse'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>PSE Planejado</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder='Insira a percepção subjetiva de esforço...'
+                          type='number'
+                          max={10}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='pse'
+                  render={({ field: { value = 0, onChange } }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Slider min={0} max={10} step={1} defaultValue={[value]} onValueChange={onChange} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className='w-fit flex gap-1 items-center text-sm underline mt-1 hover:font-semibold'>
+                      <Info size={18} />
+                      <p>Ver escala</p>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-fit'>
+                    <p className='font-semibold'>Escala de Percepção Subjetiva de Esforço</p>
+                    <ul className='flex flex-col gap-2 mt-2 p-2'>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold border border-gray-200'>0</div> •
+                        Absolutamente nada
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#B6D5F1] text-white'>1</div> •
+                        Extremamente fraco
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#89CED3] text-white'>2</div> • Muito
+                        fraco
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#30D187] text-white'>3</div> •
+                        Moderado
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#4EDF42] text-gray-900'>4</div> •
+                        Pouco forte
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#BBF31A] text-gray-900'>5</div> •
+                        Forte
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#FFFF00] text-gray-900'>6</div>
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#FFE700] text-gray-900'>7</div> •
+                        Muito forte
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#FF8900] text-white'>8</div>
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#FF2F00] text-white'>9</div>
+                      </li>
+                      <li className='flex gap-2'>
+                        <div className='size-6 text-center rounded-md font-bold bg-[#E60000] text-white'>10</div> •
+                        Máximo
+                      </li>
+                    </ul>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </form>
+          </Form>
+          <DrawerFooter className='flex flex-row justify-between'>
+            <DrawerClose className='w-fit'>
+              <Button variant='outline'>Cancelar</Button>
+            </DrawerClose>
+            <Button form='athlete' className='w-fit' type='submit' isLoading={form.formState.isSubmitting}>
+              Cadastrar
+            </Button>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  )
+}
