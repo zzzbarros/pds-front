@@ -26,7 +26,7 @@ export function DatePicker({ control, label, name, description }: Props) {
       render={({ field }) => (
         <FormItem className='flex flex-col '>
           <FormLabel className='mb-1'>{label}</FormLabel>
-          <Popover>
+          <Popover modal={true}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
