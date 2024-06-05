@@ -4,6 +4,7 @@ import { startTransition, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
   Button,
@@ -36,19 +37,22 @@ import {
 } from '@/components/ui'
 import revalidateTag from '@/lib/revalidateAction'
 import { Info, Plus } from 'lucide-react'
+import { useParams } from 'next/navigation'
+
+interface Props {
+  onSuccess(date: Date): void
+}
 
 type FormProps = z.input<typeof schema>
-type OutputFormProps = z.output<typeof schema>
 
 const schema = z
   .object({
-    date: z
-      .string()
-      .min(1, {
-        message: 'Data do Treino é obrigatório',
-      })
-      .default(''),
-    trainingType: z
+    date: z.coerce.date({
+      errorMap: (issue, { defaultError }) => ({
+        message: issue.code === 'invalid_date' ? 'Data do Treino é obrigatório' : defaultError,
+      }),
+    }),
+    trainingTypeUuid: z
       .string()
       .min(1, {
         message: 'Tipo de Treino é obrigatório',
@@ -69,26 +73,33 @@ const schema = z
       .default(0),
     serverError: z.string().default('').optional(),
   })
-  .transform(({ date, trainingType, description, duration, pse }) => ({
+  .transform(({ date, trainingTypeUuid, description, duration, pse }) => ({
     date,
-    trainingType,
+    trainingTypeUuid,
     description,
     duration,
     pse,
   }))
 
-export function PlanningForm() {
+export function PlanningForm({ onSuccess }: Props) {
+  const params = useParams()
   const { toast } = useToast()
   const [openDrawer, setOpenDrawer] = useState(false)
+
+  const { data: trainingTypes = [], isLoading: isLoadingTrainingTypes } = useSWR('training-types/all', async () => {
+    const response = await clientFetcher('training-types/all')
+    if (!response.ok) return []
+    return response.data.trainingTypes as { label: string; value: string }[]
+  })
 
   const form = useForm<FormProps>({
     resolver: zodResolver(schema),
   })
 
   async function onSubmit(data: FormProps) {
-    const res = await clientFetcher('planning-training', {
+    const res = await clientFetcher('training-planning', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, athleteUuid: params.id }),
     })
     if (!res.ok) {
       startTransition(() => {
@@ -101,7 +112,7 @@ export function PlanningForm() {
       })
     } else {
       form.reset({})
-      revalidateTag('planning-training')
+      onSuccess(data.date)
       startTransition(() => {
         setOpenDrawer(false)
         toast({
@@ -138,21 +149,28 @@ export function PlanningForm() {
                 <DatePicker control={form.control} name='date' label='Data do Treino' />
                 <FormField
                   control={form.control}
-                  name='trainingType'
+                  name='trainingTypeUuid'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Tipo de Treino</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={isLoadingTrainingTypes}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder='Selecione o tipo de treino' />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                            <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                            <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                            {trainingTypes.map(({ label, value }) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                            {!trainingTypes.length && <span className='px-2 text-sm'>Nenhuma opção encontrada...</span>}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -209,7 +227,7 @@ export function PlanningForm() {
                   render={({ field: { value = 0, onChange } }) => (
                     <FormItem>
                       <FormControl>
-                        <Slider min={0} max={10} step={1} defaultValue={[value]} onValueChange={onChange} />
+                        <Slider min={0} max={10} value={[value]} onValueChange={onChange} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -273,7 +291,7 @@ export function PlanningForm() {
             </form>
           </Form>
           <DrawerFooter className='flex flex-row justify-between'>
-            <DrawerClose className='w-fit'>
+            <DrawerClose className='w-fit' tabIndex={-1}>
               <Button variant='outline'>Cancelar</Button>
             </DrawerClose>
             <Button form='athlete' className='w-fit' type='submit' isLoading={form.formState.isSubmitting}>
