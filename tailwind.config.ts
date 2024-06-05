@@ -27,6 +27,10 @@ const config = {
             DEFAULT: 'rgb(var(--primary-medium) / <alpha-value>)',
             foreground: 'rgb(var(--primary-medium-foreground) / <alpha-value>)',
           },
+          night: {
+            DEFAULT: 'hsl(var(--primary-night) / <alpha-value>)',
+            foreground: 'hsl(var(--primary-night-foreground) / <alpha-value>)',
+          },
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
