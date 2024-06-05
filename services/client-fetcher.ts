@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 const baseUrl = process.env.api ?? ''
 
-export async function clientFetcher<T = any>(url: string, props: RequestInit | undefined) {
+export async function clientFetcher<T = any>(url: string, props?: RequestInit | undefined) {
   const user = getCookie('user')
   const response = await fetch(baseUrl.concat(url), {
     ...props,
