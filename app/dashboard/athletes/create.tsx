@@ -144,7 +144,12 @@ export function Create() {
                     </FormItem>
                   )}
                 />
-                <DatePicker control={form.control} name='birthday' label='Data de nascimento' />
+                <DatePicker
+                  control={form.control}
+                  name='birthday'
+                  label='Data de nascimento'
+                  disabled={(date) => date > new Date()}
+                />
                 <FormField
                   control={form.control}
                   name='height'
@@ -175,7 +180,7 @@ export function Create() {
             </form>
           </Form>
           <DrawerFooter className='flex flex-row justify-between mb-4'>
-            <DrawerClose className='w-fit'>
+            <DrawerClose className='w-fit' tabIndex={-1}>
               <Button variant='outline'>Cancelar</Button>
             </DrawerClose>
             <Button form='athlete' className='w-fit' type='submit' isLoading={form.formState.isSubmitting}>
