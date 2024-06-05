@@ -16,16 +16,17 @@ interface Props {
   name: string
   control: Control<any, any>
   description?: string
+  disabled?(date: Date): boolean
 }
 
-export function DatePicker({ control, label, name, description }: Props) {
+export function DatePicker({ control, label, name, description, disabled = () => false }: Props) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className='flex flex-col '>
-          <FormLabel className='mb-1'>{label}</FormLabel>
+        <FormItem className='space-y-2 flex flex-col'>
+          <FormLabel className='mt-1.5'>{label}</FormLabel>
           <Popover modal={true}>
             <PopoverTrigger asChild>
               <FormControl>
@@ -45,7 +46,7 @@ export function DatePicker({ control, label, name, description }: Props) {
                 defaultMonth={field.value}
                 selected={field.value}
                 onSelect={field.onChange}
-                disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                disabled={(date) => date < new Date('1900-01-01') || disabled?.(date)}
                 initialFocus
                 fromYear={1910}
                 toYear={2100}

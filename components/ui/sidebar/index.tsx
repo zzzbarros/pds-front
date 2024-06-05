@@ -3,7 +3,7 @@ import { MenuButton } from './menu'
 
 const menus = [
   { href: ['/dashboard'], label: 'Inicio', icon: <Home /> },
-  { href: ['/dashboard/athletes', '/dashboard/athletes/[id]/planning'], label: 'Atletas', icon: <Users /> },
+  { href: ['/dashboard/athletes', '/dashboard/athletes/[id]/training-planning'], label: 'Atletas', icon: <Users /> },
   { href: ['/dashboard/training-types'], label: 'Tipos de Treino', icon: <Bolt /> },
 ]
 
