@@ -120,7 +120,7 @@ export function Create() {
             </form>
           </Form>
           <DrawerFooter className='flex flex-row justify-between mb-4'>
-            <DrawerClose className='w-fit'>
+            <DrawerClose className='w-fit' tabIndex={-1}>
               <Button variant='outline'>Cancelar</Button>
             </DrawerClose>
             <Button form='training-type' className='w-fit' type='submit' isLoading={form.formState.isSubmitting}>
