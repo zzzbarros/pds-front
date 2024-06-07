@@ -6,9 +6,9 @@ const menus = [
   {
     href: [
       '/dashboard/athletes',
+      '/dashboard/athletes/[id]/monitoring',
       '/dashboard/athletes/[id]/training-planning',
       '/dashboard/athletes/[id]/training',
-      '/dashboard/athletes/[id]/monitoring',
     ],
     label: 'Atletas',
     icon: <Users />,
@@ -18,7 +18,7 @@ const menus = [
 
 export function Sidebar() {
   return (
-    <div className='pt-5 pb-8 px-12 border-r'>
+    <div className='pt-5 pb-8 px-12 border-r print:hidden'>
       <menu className='flex flex-col gap-4'>
         {menus.map((props) => (
           <MenuButton key={props.label} {...props} />
