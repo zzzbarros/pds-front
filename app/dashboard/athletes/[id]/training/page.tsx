@@ -69,33 +69,35 @@ export default function PlanningPage() {
   const firstDayOfWeek = weekDates[0]
   const lastDayOfWeek = weekDates[6]
 
-  const { data: trainingData, isLoading: isLoadingTraining } = useSWR(
-    ['training', firstDayOfWeek, lastDayOfWeek, id],
-    async () => {
-      const response = await clientFetcher(
-        `trainings?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
-      )
-      if (!response.ok) return { trainings: [] as TrainingProps['trainings'] } as TrainingProps
-      return response.data as TrainingProps
-    }
-  )
+  const {
+    data: trainingData,
+    isLoading: isLoadingTraining,
+    mutate: mutateTrainings,
+  } = useSWR(['training', firstDayOfWeek, lastDayOfWeek, id], async () => {
+    const response = await clientFetcher(
+      `trainings?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
+    )
+    if (!response.ok) return { trainings: [] as TrainingProps['trainings'] } as TrainingProps
+    return response.data as TrainingProps
+  })
 
-  const { data: plannedData, isLoading: isLoadingPlanning } = useSWR(
-    ['training-planning', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings],
-    async () => {
-      if (!showPlannedTrainings)
-        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-      const response = await clientFetcher(
-        `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
-      )
-      if (!response.ok)
-        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-      return response.data as TrainingPlanningProps
-    }
-  )
+  const {
+    data: plannedData,
+    isLoading: isLoadingPlanning,
+    mutate: mutatePlannedTrainings,
+  } = useSWR(['training-planning', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings], async () => {
+    if (!showPlannedTrainings)
+      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+    const response = await clientFetcher(
+      `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
+    )
+    if (!response.ok)
+      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+    return response.data as TrainingPlanningProps
+  })
 
-  const weekTrainings = trainingData?.trainings ?? []
-  const plannedTrainings = plannedData?.trainingPlanning ?? []
+  const weekTrainings = trainingData?.trainings || []
+  const plannedTrainings = plannedData?.trainingPlanning || []
 
   function setWeek(week: string) {
     if (week) params.set('week', week)
@@ -159,6 +161,8 @@ export default function PlanningPage() {
         <PlanningForm
           onSuccess={(date) => {
             router.push(pathname.concat(`?week=${getWeekNumberFromDate(date)}`))
+            mutateTrainings()
+            mutatePlannedTrainings()
           }}
         />
       </div>
