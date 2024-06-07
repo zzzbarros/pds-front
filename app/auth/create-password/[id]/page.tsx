@@ -20,7 +20,7 @@ import {
 } from '@/components/ui'
 import { validator } from '@/lib/validator'
 import { services } from '@/services'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next-nprogress-bar'
 
 type FormProps = z.input<typeof schema>
 type OutputFormProps = z.output<typeof schema>

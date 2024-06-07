@@ -2,7 +2,7 @@
 
 import { deleteCookie } from 'cookies-next'
 import { DropdownMenuItem } from '@/components/ui'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next-nprogress-bar'
 import { LogOut } from 'lucide-react'
 
 export function LogoutButton() {

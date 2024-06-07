@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next-nprogress-bar'
 import { setCookie } from 'cookies-next'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'

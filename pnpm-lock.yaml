@@ -58,6 +58,9 @@ dependencies:
   next:
     specifier: 14.2.3
     version: 14.2.3(react-dom@18.0.0)(react@18.0.0)
+  next-nprogress-bar:
+    specifier: ^2.3.12
+    version: 2.3.12
   nextjs-toploader:
     specifier: ^1.6.12
     version: 1.6.12(next@14.2.3)(react-dom@18.0.0)(react@18.0.0)
@@ -2820,6 +2823,12 @@ packages:
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
+
+  /next-nprogress-bar@2.3.12:
+    resolution: {integrity: sha512-BCsmNmssPY4QfYKux7cGYm/JmsM/n9TGMJJDyYPt7ckWyK8l43hMgi7g9d7u/IxCaEAx3pbzfg7Ity0zdlDnGA==}
+    dependencies:
+      nprogress: 0.2.0
+    dev: false
 
   /next@14.2.3(react-dom@18.0.0)(react@18.0.0):
     resolution: {integrity: sha512-dowFkFTR8v79NPJO4QsBUtxv0g9BrS/phluVpMAt2ku7H+cbcBJlopXjkWlwxrk/xGqMemr7JkGPGemPrLLX7A==}
