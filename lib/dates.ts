@@ -45,25 +45,48 @@ export function getWeekDatesFromInput(weekString: string): Date[] {
   return weekDates
 }
 
+/**
+ * Função para obter o número da semana no formato "YYYY-Www" considerando que a semana começa no domingo.
+ * @param date A data de referência.
+ * @returns Uma string representando o número da semana no formato "YYYY-Www".
+ */
 export function getWeekNumberFromDate(date: Date): string {
-  const currentDate = new Date(date.getTime())
+  const currentDate = new Date(date.getTime());
 
-  // Define que a semana começa na segunda-feira e o primeiro dia do ano é 4 de janeiro (ISO-8601)
-  currentDate.setHours(0, 0, 0, 0)
-  currentDate.setDate(currentDate.getDate() + 3 - ((currentDate.getDay() + 6) % 7))
+  // Define que a semana começa no domingo
+  currentDate.setHours(0, 0, 0, 0);
+  currentDate.setDate(currentDate.getDate() - currentDate.getDay()); // Retrocede para o domingo
 
   // Calcula o início do ano
-  const startOfYear = new Date(currentDate.getFullYear(), 0, 4)
+  const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
 
   // Calcula o número da semana
-  const weekNumber = Math.ceil(((currentDate.getTime() - startOfYear.getTime()) / 86400000 + 1) / 7)
+  const daysDifference = Math.ceil((currentDate.getTime() - startOfYear.getTime()) / 86400000);
+  let weekNumber = Math.floor((daysDifference + 1) / 7) + 1; // Adiciona 1 para ajustar para o início no domingo
+
+  // Ajuste para o caso em que o último dia do ano é na semana 1 do ano seguinte
+  if (weekNumber === 0) {
+    const endOfYear = new Date(currentDate.getFullYear(), 11, 31);
+    endOfYear.setHours(0, 0, 0, 0);
+    endOfYear.setDate(endOfYear.getDate() - endOfYear.getDay()); // Retrocede para o domingo
+    weekNumber = getISOWeekNumber(endOfYear); // Recalcula a semana para o último domingo do ano
+  }
 
   // Formata o número da semana para o formato "YYYY-Www"
-  const year = currentDate.getFullYear()
-  const week = weekNumber < 10 ? '0' + weekNumber : weekNumber.toString()
+  const year = currentDate.getFullYear();
+  const week = weekNumber < 10 ? '0' + weekNumber : weekNumber.toString();
 
-  return `${year}-W${week}`
+  return `${year}-W${week}`;
 }
+
+// Função auxiliar para obter o número da semana ISO-8601
+function getISOWeekNumber(date: Date): number {
+  const startOfYear = new Date(date.getFullYear(), 0, 1);
+  const daysDifference = Math.ceil((date.getTime() - startOfYear.getTime()) / 86400000);
+  return Math.floor((daysDifference + startOfYear.getDay() + 1) / 7) + 1;
+}
+
+
 
 export function compareDates(date1: Date, date2: Date): boolean {
   const year1 = date1.getFullYear()
