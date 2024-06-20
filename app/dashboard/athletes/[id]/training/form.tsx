@@ -325,7 +325,7 @@ export function PlanningForm({ onSuccess }: Props) {
                       </button>
                     </PopoverTrigger>
                     <PopoverContent className='w-fit'>
-                      <p className='font-semibold'>Escala de Percepção Subjetiva de Esforço</p>
+                      <p className='font-semibold'>Escala de Percepção Subjetiva de Recuperação</p>
                       <ul className='flex flex-col gap-2 mt-2 p-2'>
                         <li className='flex gap-2'>
                           <div className='size-6 text-center rounded-md font-bold border border-gray-200'>0</div> •

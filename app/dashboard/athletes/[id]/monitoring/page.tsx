@@ -5,7 +5,7 @@ import { ChangeEvent, useMemo } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { clientFetcher } from '@/services'
-import { Input, Spinner } from '@/components/ui'
+import { Button, Input, Spinner } from '@/components/ui'
 import { DailyLoadChart, WeekLoadChart, WellBeingChart, DailyDurationChart } from '@/components/charts'
 import {
   compareDates,
@@ -151,21 +151,31 @@ export default function Monitoring() {
   }
 
   return (
-    <section className=' w-full h-full flex flex-col gap-6'>
-      <div className='flex gap-4 items-center w-ful'>
-        <Input type='week' className='max-w-44' onChange={handleWeekInput} value={week} />
-        <div className='flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
-          <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handlePreviousWeek}>
-            <ArrowLeft size={16} />
-          </button>
-          <span>
-            {firstDayOfWeek.toLocaleDateString()} - {lastDayOfWeek.toLocaleDateString()}
-          </span>
-          <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handleNextWeek}>
-            <ArrowRight size={16} />
-          </button>
+    <section className=' w-full h-full flex flex-col gap-6 print:gap-20'>
+      <div className='flex justify-between w-full'>
+        <div className='flex gap-4 items-center w-full'>
+          <Input type='week' className='max-w-44 print:hidden' onChange={handleWeekInput} value={week} />
+          <div className='flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
+            <button className='p-1 rounded-full bg-white hover:brightness-90 print:hidden' onClick={handlePreviousWeek}>
+              <ArrowLeft size={16} />
+            </button>
+            <span>
+              {firstDayOfWeek.toLocaleDateString()} - {lastDayOfWeek.toLocaleDateString()}
+            </span>
+            <button className='p-1 rounded-full bg-white hover:brightness-90 print:hidden' onClick={handleNextWeek}>
+              <ArrowRight size={16} />
+            </button>
+          </div>
+          {isLoadingWeekMonitoring && <Spinner />}
         </div>
-        {isLoadingWeekMonitoring && <Spinner />}
+        <Button
+          className='px-10 print:hidden'
+          onClick={() => {
+            if (window) window.print()
+          }}
+        >
+          Imprimir
+        </Button>
       </div>
       <DailyLoadChart {...{ labels, psr, pse, plannedTraining, performedTraining }} />
       <DailyDurationChart {...{ labels, pse, plannedPse, duration, plannedDuration }} />

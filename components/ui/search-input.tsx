@@ -35,6 +35,7 @@ export function SearchInput({ value, placeholder }: { value: string; placeholder
   return (
     <div className='flex w-full'>
       <Input
+        type='search'
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder={placeholder}

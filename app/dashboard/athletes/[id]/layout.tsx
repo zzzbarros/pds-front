@@ -9,13 +9,17 @@ import {
 } from '@/components/ui'
 import { Suspense } from 'react'
 import { TabsComponents } from './components'
+import { Details } from './components/details'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <section className='w-full h-full p-4 px-10'>
       <div className='flex flex-col gap-0.5'>
-        <h1 className='text-xl font-semibold'>Detalhes do Atleta</h1>
-        <Breadcrumb>
+        <div className='flex gap-1 items-center'>
+          <h1 className='text-xl font-semibold'>Detalhes do Atleta</h1>
+          <Details />
+        </div>
+        <Breadcrumb className='print:hidden'>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href='/dashboard'>Inicio</BreadcrumbLink>

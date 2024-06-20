@@ -81,20 +81,19 @@ export default function PlanningPage() {
     return response.data as TrainingProps
   })
 
-  const {
-    data: plannedData,
-    isLoading: isLoadingPlanning,
-    mutate: mutatePlannedTrainings,
-  } = useSWR(['training-planning', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings], async () => {
-    if (!showPlannedTrainings)
-      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-    const response = await clientFetcher(
-      `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
-    )
-    if (!response.ok)
-      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-    return response.data as TrainingPlanningProps
-  })
+  const { data: plannedData, isLoading: isLoadingPlanning } = useSWR(
+    ['planned-training', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings],
+    async () => {
+      if (!showPlannedTrainings)
+        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+      const response = await clientFetcher(
+        `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
+      )
+      if (!response.ok)
+        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+      return response.data as TrainingPlanningProps
+    }
+  )
 
   const weekTrainings = trainingData?.trainings || []
   const plannedTrainings = plannedData?.trainingPlanning || []
@@ -160,9 +159,9 @@ export default function PlanningPage() {
         </div>
         <PlanningForm
           onSuccess={(date) => {
-            router.push(pathname.concat(`?week=${getWeekNumberFromDate(date)}`))
-            mutateTrainings()
-            mutatePlannedTrainings()
+            const createdInWeek = getWeekNumberFromDate(date)
+            if (createdInWeek === week) return mutateTrainings()
+            router.replace(pathname.concat(`?week=${createdInWeek}`))
           }}
         />
       </div>
