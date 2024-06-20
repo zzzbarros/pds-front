@@ -36,7 +36,7 @@ export default async function AthleteList({ searchParams }: Props) {
         </Breadcrumb>
       </div>
       <div className='pt-6 flex justify-between'>
-        <SearchInput placeholder='Procure pelo nome do atleta...' value={search as string} />
+        <SearchInput placeholder='Procure pelo nome do atleta ou e-mail...' value={search as string} />
         <Create />
       </div>
       <Suspense
