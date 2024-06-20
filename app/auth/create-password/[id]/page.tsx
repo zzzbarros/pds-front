@@ -85,8 +85,7 @@ export default function CreatePassword() {
       })
       form.setError('serverError', {})
     } else {
-      router.push('/auth/login')
-      router.refresh()
+      router.replace('/auth/login')
       toast({
         title: res.title,
         description: res.message,
