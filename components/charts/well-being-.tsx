@@ -76,7 +76,7 @@ export function WellBeingChart(props: Props) {
   }
 
   return (
-    <div className='w-full h-full border border-gray-200 rounded-md p-6'>
+    <div className='w-full  border border-gray-200 rounded-md p-6'>
       <h2 className='font-semibold'>Monitoramento de Bem-Estar</h2>
       <Bar options={options} data={data} />
     </div>

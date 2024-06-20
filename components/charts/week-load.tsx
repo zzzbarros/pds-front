@@ -40,18 +40,28 @@ interface Props {
 }
 
 export function WeekLoadChart(props: Props) {
-  const { week, strain, monotony, load } = props
+  const { week, strain, monotony, load, acuteChronicLoadRatio } = props
 
   const data = {
-    title: 'Carga Diária da Semana',
+    title: 'Carga da Semana',
     labels: week,
     datasets: [
       {
         type: 'line' as const,
-        label: 'Monotonia',
+        label: 'Risco Agudo:Crônico',
         borderColor: '#E60000',
         backgroundColor: '#E60000',
-        lineTension: 0.5,
+        lineTension: 0.3,
+        fill: false,
+        data: acuteChronicLoadRatio,
+        yAxisID: 'y1',
+      },
+      {
+        type: 'line' as const,
+        label: 'Monotonia',
+        borderColor: '#624F96',
+        backgroundColor: '#624F96',
+        lineTension: 0.3,
         fill: false,
         data: monotony,
         yAxisID: 'y1',
@@ -76,7 +86,7 @@ export function WeekLoadChart(props: Props) {
       },
       {
         type: 'bar' as const,
-        label: 'Strain',
+        label: 'Tensão',
         backgroundColor: '#FFA908',
         borderColor: '#FFA908',
         borderRadius: 8,
