@@ -51,7 +51,7 @@ export default function PlanningPage() {
   const firstDayOfWeek = weekDates[0]
   const lastDayOfWeek = weekDates[6]
 
-  const { data, isLoading } = useSWR(['training-planning', firstDayOfWeek, lastDayOfWeek, id], async () => {
+  const { data, isLoading, mutate } = useSWR(['training-planning', firstDayOfWeek, lastDayOfWeek, id], async () => {
     const response = await clientFetcher(
       `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
     )
@@ -104,7 +104,9 @@ export default function PlanningPage() {
         </div>
         <PlanningForm
           onSuccess={(date) => {
-            router.push(pathname.concat(`?week=${getWeekNumberFromDate(date)}`))
+            const createdInWeek = getWeekNumberFromDate(date)
+            if (createdInWeek === week) return mutate()
+            router.replace(pathname.concat(`?week=${createdInWeek}`))
           }}
         />
       </div>
