@@ -65,7 +65,7 @@ export default function LoginPage() {
     if (res.ok) {
       if (res?.data) {
         setCookie('user', JSON.stringify(res.data))
-        router.push('/dashboard')
+        router.push('/authenticated')
       }
     } else {
       form.setError('serverError', {})

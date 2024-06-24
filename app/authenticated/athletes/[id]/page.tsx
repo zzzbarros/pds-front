@@ -6,5 +6,5 @@ interface Props {
 }
 
 export default async function AthleteDetails({ params }: Props) {
-  redirect(`/dashboard/athletes/${params.id}/monitoring`)
+  redirect(`/authenticated/athletes/${params.id}/monitoring`)
 }

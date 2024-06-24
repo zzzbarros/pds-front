@@ -44,8 +44,8 @@ export default async function List({ page, search }: Props) {
             {!!trainingTypes?.length &&
               trainingTypes.map(({ id, name, isEnabled }) => (
                 <TableRow key={id}>
-                  <TableCell href={`/dashboard/training-types/${id}`}>{name}</TableCell>
-                  <TableCell href={`/dashboard/training-types/${id}`}>{isEnabled ? 'Ativo' : 'Inativo'}</TableCell>
+                  <TableCell href={`/authenticated/training-types/${id}`}>{name}</TableCell>
+                  <TableCell href={`/authenticated/training-types/${id}`}>{isEnabled ? 'Ativo' : 'Inativo'}</TableCell>
                 </TableRow>
               ))}
           </TableBody>

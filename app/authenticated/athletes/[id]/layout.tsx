@@ -22,11 +22,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <Breadcrumb className='print:hidden'>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href='/dashboard'>Inicio</BreadcrumbLink>
+              <BreadcrumbLink href='/authenticated'>Inicio</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href='/dashboard/athletes'>Atletas</BreadcrumbLink>
+              <BreadcrumbLink href='/authenticated/athletes'>Atletas</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
