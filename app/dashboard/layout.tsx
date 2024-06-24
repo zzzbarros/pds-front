@@ -25,8 +25,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className='w-full min-h-screen'>
-      <header className='px-9 py-4 flex justify-between items-center border-b border-[#DEDFE3]'>
+    <div className='w-full min-h-screen relative'>
+      <header className='px-9 py-4 flex justify-between items-center border-b border-[#DEDFE3] fixed w-full bg-white z-20'>
         <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
         <DropdownMenu>
           <DropdownMenuTrigger className='rounded-[6px] flex items-center gap-2 p-0.5 px-3'>
@@ -45,9 +45,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <div className='w-full h-full flex' style={{ minHeight: 'calc(100vh - 80.8px)' }}>
+      <div className='w-full h-full flex relative z-10' style={{ minHeight: 'calc(100vh - 80.8px)' }}>
         <Sidebar />
-        <div className='w-full h-full'>{children}</div>
+        <div className='w-full h-full mt-20'>{children}</div>
       </div>
     </div>
   )

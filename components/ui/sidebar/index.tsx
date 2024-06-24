@@ -18,8 +18,8 @@ const menus = [
 
 export function Sidebar() {
   return (
-    <div className='pt-5 pb-8 px-12 border-r print:hidden'>
-      <menu className='flex flex-col gap-4'>
+    <div className='pt-5 pb-8 px-8 border-r print:hidden relative min-w-60 mt-20'>
+      <menu className='flex flex-col gap-2 fixed '>
         {menus.map((props) => (
           <MenuButton key={props.label} {...props} />
         ))}
