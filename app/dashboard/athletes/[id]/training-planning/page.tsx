@@ -1,11 +1,22 @@
 'use client'
 
-import useSWR from 'swr'
-import { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Plus } from 'lucide-react'
+import useSWR from 'swr'
 import { clientFetcher } from '@/services'
-import { Input, Skeleton, Spinner, Table, TableBody, TableHead, TableHeader, TableRow, TableTd } from '@/components/ui'
+import {
+  Button,
+  Input,
+  Skeleton,
+  Spinner,
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableTd,
+} from '@/components/ui'
 import {
   compareDates,
   capitalizeFirstLetter,
@@ -17,16 +28,23 @@ import {
   getWeekNumberFromDate,
 } from '@/lib/utils'
 import { PlanningForm } from './form'
+import { TrainingCard } from './components'
+
+export interface BaseTrainingProps {
+  id: string
+  date: Date
+  trainingType: {
+    id: string
+    name: string
+  }
+  duration: number
+  pse: number
+  description?: string
+  load: number
+}
 
 interface TrainingPlanningProps {
-  trainingPlanning: {
-    id: string
-    date: Date
-    trainingType: string
-    duration: number
-    pse: number
-    description?: string
-  }[]
+  trainingPlanning: BaseTrainingProps[]
   charge: {
     week: number
     previousWeek: number
@@ -84,6 +102,12 @@ export default function PlanningPage() {
     return plannings
   }
 
+  function onSuccessPlanningTraining(date: Date) {
+    const createdInWeek = getWeekNumberFromDate(date)
+    if (createdInWeek === week) return mutate()
+    router.replace(pathname.concat(`?week=${createdInWeek}`))
+  }
+
   return (
     <section className='w-full h-full'>
       <div className='flex items-center mb-2 w-ful justify-between'>
@@ -102,15 +126,14 @@ export default function PlanningPage() {
           </div>
           {isLoading && <Spinner />}
         </div>
-        <PlanningForm
-          onSuccess={(date) => {
-            const createdInWeek = getWeekNumberFromDate(date)
-            if (createdInWeek === week) return mutate()
-            router.replace(pathname.concat(`?week=${createdInWeek}`))
-          }}
-        />
+        <PlanningForm onSuccess={onSuccessPlanningTraining}>
+          <Button className='px-10'>
+            <Plus />
+            Planejar Treino
+          </Button>
+        </PlanningForm>
       </div>
-      <section className='grid grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
+      <section tabIndex={1} className='grid grid-cols-7 min-h-[38vh] rounded-md border border-gray-200'>
         {weekDates.map((date) => {
           const isCurrentDay = compareDates(date, currentDay)
           const day = date.toLocaleDateString('pt-BR').split('/')[0]
@@ -129,7 +152,13 @@ export default function PlanningPage() {
 
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
                 {plannedTrainings.map((plannedTraining) => (
-                  <TrainingCard key={plannedTraining.id} {...plannedTraining} />
+                  <li key={plannedTraining.id}>
+                    <TrainingCard
+                      {...plannedTraining}
+                      onSuccessUpdate={onSuccessPlanningTraining}
+                      onSuccessDelete={mutate}
+                    />
+                  </li>
                 ))}
               </ul>
             </li>
@@ -178,35 +207,4 @@ export default function PlanningPage() {
   )
 }
 
-function TrainingCard({
-  trainingType,
-  description,
-  duration,
-  pse,
-}: {
-  id: string
-  date: Date
-  trainingType: string
-  duration: number
-  pse: number
-  description?: string
-}) {
-  return (
-    <div className='animate-[enter_0.8s] flex flex-col gap-0.5 bg-primary-medium w-full rounded-md p-2'>
-      <p className='text-xs text-white text-ellipsis line-clamp-2'>
-        Tipo: <strong>{trainingType}</strong>
-      </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-2'>
-        Duração: <strong>{duration} minutos</strong>
-      </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-2'>
-        PSE: <strong>{pse}</strong>
-      </p>
-      {description && (
-        <p className='text-xs text-white text-ellipsis line-clamp-2'>
-          Descrição: <strong>{description}</strong>
-        </p>
-      )}
-    </div>
-  )
-}
+

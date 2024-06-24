@@ -1,10 +1,12 @@
 'use client'
 
-import { startTransition, useState } from 'react'
+import { useParams } from 'next/navigation'
+import { startTransition, useEffect, useState, type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
 import useSWR from 'swr'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Save } from 'lucide-react'
 import { clientFetcher } from '@/services'
 import {
   Button,
@@ -31,19 +33,17 @@ import {
   SelectContent,
   SelectItem,
   Slider,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
+  PseScalePopover,
 } from '@/components/ui'
-import revalidateTag from '@/lib/revalidateAction'
-import { Info, Plus } from 'lucide-react'
-import { useParams } from 'next/navigation'
 
 interface Props {
-  onSuccess(date: Date): void
+  children: ReactNode
+  onSuccess?(date: Date): void
+  defaultValues?: OutputFormProps & { trainingId: string }
 }
 
 type FormProps = z.input<typeof schema>
+type OutputFormProps = z.output<typeof schema>
 
 const schema = z
   .object({
@@ -81,10 +81,12 @@ const schema = z
     pse,
   }))
 
-export function PlanningForm({ onSuccess }: Props) {
+export function PlanningForm({ onSuccess, children, defaultValues }: Props) {
   const params = useParams()
   const { toast } = useToast()
   const [openDrawer, setOpenDrawer] = useState(false)
+
+  const title = !!defaultValues ? 'Editar' : 'Cadastrar'
 
   const { data: trainingTypes = [], isLoading: isLoadingTrainingTypes } = useSWR('training-types/all', async () => {
     const response = await clientFetcher('training-types/all')
@@ -94,12 +96,16 @@ export function PlanningForm({ onSuccess }: Props) {
 
   const form = useForm<FormProps>({
     resolver: zodResolver(schema),
+    defaultValues,
   })
 
   async function onSubmit(data: FormProps) {
     const res = await clientFetcher('training-planning', {
-      method: 'POST',
-      body: JSON.stringify({ ...data, athleteUuid: params.id }),
+      method: defaultValues ? 'PUT' : 'POST',
+      body: JSON.stringify({
+        ...data,
+        ...(defaultValues ? { trainingUuid: defaultValues.trainingId } : { athleteUuid: params.id }),
+      }),
     })
     if (!res.ok) {
       startTransition(() => {
@@ -112,7 +118,7 @@ export function PlanningForm({ onSuccess }: Props) {
       })
     } else {
       form.reset({})
-      onSuccess(data.date)
+      onSuccess?.(data.date)
       startTransition(() => {
         setOpenDrawer(false)
         toast({
@@ -123,20 +129,19 @@ export function PlanningForm({ onSuccess }: Props) {
     }
   }
 
+  useEffect(() => {
+    form.reset(defaultValues)
+  }, [defaultValues])
+
   return (
     <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
-      <DrawerTrigger asChild>
-        <Button className='px-10'>
-          <Plus />
-          Planejar Treino
-        </Button>
-      </DrawerTrigger>
+      <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-1'>
           <DrawerHeader className='text-center'>
-            <DrawerTitle>Planejamento de Treino</DrawerTitle>
+            <DrawerTitle>{title} Planejamento de Treino</DrawerTitle>
             <DrawerDescription>
-              Preencha os campos a seguir para cadastrar o planejamento de treino do atleta na plataforma.
+              Preencha os campos a seguir para {title.toLowerCase()} o planejamento de treino do atleta na plataforma.
             </DrawerDescription>
           </DrawerHeader>
           <Form {...form}>
@@ -233,60 +238,7 @@ export function PlanningForm({ onSuccess }: Props) {
                     </FormItem>
                   )}
                 />
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className='w-fit flex gap-1 items-center text-sm underline mt-1 hover:font-semibold'>
-                      <Info size={18} />
-                      <p>Ver escala</p>
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className='w-fit'>
-                    <p className='font-semibold'>Escala de Percepção Subjetiva de Esforço</p>
-                    <ul className='flex flex-col gap-2 mt-2 p-2'>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold border border-gray-200'>0</div> •
-                        Absolutamente nada
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#B6D5F1] text-white'>1</div> •
-                        Extremamente fraco
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#89CED3] text-white'>2</div> • Muito
-                        fraco
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#30D187] text-white'>3</div> •
-                        Moderado
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#4EDF42] text-gray-900'>4</div> •
-                        Pouco forte
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#BBF31A] text-gray-900'>5</div> •
-                        Forte
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#FFFF00] text-gray-900'>6</div>
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#FFE700] text-gray-900'>7</div> •
-                        Muito forte
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#FF8900] text-white'>8</div>
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#FF2F00] text-white'>9</div>
-                      </li>
-                      <li className='flex gap-2'>
-                        <div className='size-6 text-center rounded-md font-bold bg-[#E60000] text-white'>10</div> •
-                        Máximo
-                      </li>
-                    </ul>
-                  </PopoverContent>
-                </Popover>
+                <PseScalePopover />
               </div>
             </form>
           </Form>
@@ -295,7 +247,8 @@ export function PlanningForm({ onSuccess }: Props) {
               <Button variant='outline'>Cancelar</Button>
             </DrawerClose>
             <Button form='athlete' className='w-fit' type='submit' isLoading={form.formState.isSubmitting}>
-              Cadastrar
+              {!form.formState.isSubmitting && <Save />}
+              Salvar
             </Button>
           </DrawerFooter>
         </div>
