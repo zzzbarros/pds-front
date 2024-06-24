@@ -71,10 +71,26 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'slide-right': {
+          from: { transform: 'translateX(-15px)' },
+          to: { transform: 'translateX(0)' },
+        },
+        'tracking-in-contract': {
+          '0%': { letterSpacing: '.1em', opacity: '0' },
+          '40%': { opacity: '.6' },
+          '100%': { letterSpacing: 'normal', opacity: '1' },
+        },
+        'shadow-drop-center': {
+          '0%': { boxShadow: '0 0 0 0 transparent' },
+          '100%': { boxShadow: '0 0 20px 0 rgba(255, 255, 255, 0.25)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'slide-right': 'slide-right 0.4s linear both',
+        'tracking-in-contract': 'tracking-in-contract 0.4s linear both',
+        'shadow-drop-center': 'shadow-drop-center 0.4s linear both',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
