@@ -21,7 +21,7 @@ export function BaseTrainingCard({ trainingType, description, duration, pse, psr
     <div
       tabIndex={1}
       className={cn(
-        'animate-[enter_0.8s] flex flex-col gap-0.5 bg-primary-medium w-full rounded-md p-2',
+        'animate-[enter_0.8s] flex flex-col gap-0.5 bg-primary-medium w-full rounded-md p-2 group',
         isPlanned && 'bg-primary-night'
       )}
     >
