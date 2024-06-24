@@ -1,4 +1,7 @@
-export function Spinner() {
+import { cn } from '@/lib/utils'
+import type { SVGProps } from 'react'
+
+export function Spinner({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -6,11 +9,11 @@ export function Spinner() {
       height='24'
       viewBox='0 0 24 24'
       fill='none'
-      stroke='#8B6DD7'
       strokeWidth='2'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className='animate-spin lucide lucide-loader-circle'
+      className={cn('animate-spin lucide lucide-loader-circle stroke-primary', className)}
+      {...props}
     >
       <path d='M21 12a9 9 0 1 1-6.219-8.56' />
     </svg>

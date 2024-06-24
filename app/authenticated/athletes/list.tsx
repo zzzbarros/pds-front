@@ -31,7 +31,7 @@ export default async function List({ page, search }: Props) {
 
   const athletes: AthleteProps[] = response?.data?.data ?? []
 
-  const athleteDetailsRoute = (id: string) => `/dashboard/athletes/${id}/monitoring`
+  const athleteDetailsRoute = (id: string) => `/authenticated/athletes/${id}/monitoring`
 
   return (
     <>

@@ -1,9 +1,9 @@
 'use client'
 
-import useSWR from 'swr'
-import { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
   Input,
@@ -22,23 +22,27 @@ import {
   compareDates,
   capitalizeFirstLetter,
   cn,
-  getCurrentWeekDates,
   getNextWeek,
   getPreviousWeek,
   getWeekDatesFromInput,
   getWeekNumberFromDate,
 } from '@/lib/utils'
 import { PlanningForm } from './form'
+import { BaseTrainingCard } from '@/components/features'
 
 interface TrainingProps {
-  trainings: {
-    id: string
-    date: Date
-    trainingType: string
-    duration: number
-    pse: number
-    description?: string
-  }[]
+  id: string
+  date: Date
+  trainingType: string | { id: string; name: string }
+  duration: number
+  pse: number
+  load: number
+  psr?: number
+  description?: string
+}
+
+interface TrainingsProps {
+  trainings: TrainingProps[]
   charge: {
     week: number
     previousWeek: number
@@ -51,8 +55,12 @@ interface TrainingProps {
   }
 }
 
-interface TrainingPlanningProps extends Omit<TrainingProps, 'training'> {
-  trainingPlanning: TrainingProps['trainings']
+interface TrainingPlanningProps extends Omit<TrainingsProps, 'training'> {
+  trainingPlanning: TrainingProps[]
+}
+
+function fillTrainingsByDay(date: Date, currentTrainings: TrainingProps[]): TrainingProps[] {
+  return currentTrainings?.filter((training) => compareDates(new Date(training.date), date))
 }
 
 export default function PlanningPage() {
@@ -63,7 +71,7 @@ export default function PlanningPage() {
   const router = useRouter()
   const currentDay = new Date()
   const week = searchParams.get('week') ?? getWeekNumberFromDate(currentDay)
-  const weekDates = week ? getWeekDatesFromInput(week) : getCurrentWeekDates()
+  const weekDates = getWeekDatesFromInput(week)
   const showPlannedTrainings = (searchParams.get('showPlannedTrainings') || 'true') === 'true'
 
   const firstDayOfWeek = weekDates[0]
@@ -73,12 +81,12 @@ export default function PlanningPage() {
     data: trainingData,
     isLoading: isLoadingTraining,
     mutate: mutateTrainings,
-  } = useSWR(['training', firstDayOfWeek, lastDayOfWeek, id], async () => {
+  } = useSWR(['performed-training', firstDayOfWeek, lastDayOfWeek, id], async () => {
     const response = await clientFetcher(
       `trainings?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
     )
-    if (!response.ok) return { trainings: [] as TrainingProps['trainings'] } as TrainingProps
-    return response.data as TrainingProps
+    if (!response.ok) return { trainings: [] as TrainingsProps['trainings'] } as TrainingsProps
+    return response.data as TrainingsProps
   })
 
   const { data: plannedData, isLoading: isLoadingPlanning } = useSWR(
@@ -95,8 +103,8 @@ export default function PlanningPage() {
     }
   )
 
-  const weekTrainings = trainingData?.trainings || []
-  const plannedTrainings = plannedData?.trainingPlanning || []
+  const weekTrainings = trainingData?.trainings ?? []
+  const weekPlannedTrainings = plannedData?.trainingPlanning ?? []
 
   function setWeek(week: string) {
     if (week) params.set('week', week)
@@ -121,14 +129,6 @@ export default function PlanningPage() {
     if (checked) params.set('showPlannedTrainings', 'true')
     else params.set('showPlannedTrainings', 'false')
     router.push(pathname.concat('?').concat(params.toString()))
-  }
-
-  function findTrainings(date: Date) {
-    return weekTrainings.filter((training) => compareDates(new Date(training.date), date))
-  }
-
-  function findPlannedTrainings(date: Date) {
-    return plannedTrainings.filter((plannedTraining) => compareDates(new Date(plannedTraining.date), date))
   }
 
   return (
@@ -165,13 +165,13 @@ export default function PlanningPage() {
           }}
         />
       </div>
-      <section className='grid grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
-        {weekDates.map((date) => {
+      <ul className='grid grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
+        {weekDates?.map((date) => {
           const isCurrentDay = compareDates(date, currentDay)
           const day = date.toLocaleDateString('pt-BR').split('/')[0]
           const textDay = capitalizeFirstLetter(Intl.DateTimeFormat('pt-BR', { weekday: 'long' }).format(date))
-          const trainings = findTrainings(date)
-          const plannedTrainings = findPlannedTrainings(date)
+          const trainings = fillTrainingsByDay(date, weekTrainings)
+          const plannedTrainings = fillTrainingsByDay(date, weekPlannedTrainings)
           return (
             <li
               key={day}
@@ -184,40 +184,46 @@ export default function PlanningPage() {
               <p className='font-medium'>{textDay}</p>
 
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
-                {plannedTrainings.map((plannedTraining) => (
-                  <TrainingCard key={plannedTraining.id} {...plannedTraining} planned={true} />
+                {plannedTrainings?.map((plannedTraining) => (
+                  <li key={plannedTraining.id}>
+                    <BaseTrainingCard {...plannedTraining} isPlanned />
+                  </li>
                 ))}
-                {trainings.map((training) => (
-                  <TrainingCard key={training.id} {...training} />
+                {trainings?.map((training) => (
+                  <li key={training.id}>
+                    <BaseTrainingCard {...training} />
+                  </li>
                 ))}
               </ul>
             </li>
           )
         })}
-      </section>
+      </ul>
       <div className='w-full rounded-md mt-6  border border-gray-200 '>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Semana</TableHead>
-              {showPlannedTrainings && <TableHead>{'Carga planejada (Unidades arbitrárias)'}</TableHead>}
+              <TableHead data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
+                {'Carga planejada (Unidades arbitrárias)'}
+              </TableHead>
               <TableHead>Carga realizada (Unidades arbitrárias)</TableHead>
-              {showPlannedTrainings && <TableHead>Treinos planejados</TableHead>}
+              <TableHead data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
+                Treinos planejados
+              </TableHead>
               <TableHead>Treinos realizados</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
               <TableTd>Semana anterior</TableTd>
-              {showPlannedTrainings && (
-                <TableTd>
-                  {isLoadingTraining ? (
-                    <Skeleton className='w-10 h-4 rounded-none' />
-                  ) : (
-                    plannedData?.charge?.previousWeek ?? 0
-                  )}
-                </TableTd>
-              )}
+              <TableTd data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
+                {isLoadingTraining ? (
+                  <Skeleton className='w-10 h-4 rounded-none' />
+                ) : (
+                  plannedData?.charge?.previousWeek ?? 0
+                )}
+              </TableTd>
               <TableTd>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
@@ -225,15 +231,13 @@ export default function PlanningPage() {
                   trainingData?.charge?.previousWeek ?? 0
                 )}
               </TableTd>
-              {showPlannedTrainings && (
-                <TableTd>
-                  {isLoadingTraining ? (
-                    <Skeleton className='w-10 h-4 rounded-none' />
-                  ) : (
-                    plannedData?.trainingTotals?.previousWeek ?? 0
-                  )}
-                </TableTd>
-              )}
+              <TableTd data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
+                {isLoadingTraining ? (
+                  <Skeleton className='w-10 h-4 rounded-none' />
+                ) : (
+                  plannedData?.trainingTotals?.previousWeek ?? 0
+                )}
+              </TableTd>
               <TableTd>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
@@ -252,15 +256,13 @@ export default function PlanningPage() {
               <TableTd>
                 {isLoadingTraining ? <Skeleton className='w-10 h-4 rounded-none' /> : trainingData?.charge?.week ?? 0}
               </TableTd>
-              {showPlannedTrainings && (
-                <TableTd>
-                  {isLoadingTraining ? (
-                    <Skeleton className='w-10 h-4 rounded-none' />
-                  ) : (
-                    plannedData?.trainingTotals?.week ?? 0
-                  )}
-                </TableTd>
-              )}
+              <TableTd data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
+                {isLoadingTraining ? (
+                  <Skeleton className='w-10 h-4 rounded-none' />
+                ) : (
+                  plannedData?.trainingTotals?.week ?? 0
+                )}
+              </TableTd>
               <TableTd>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
@@ -308,52 +310,5 @@ export default function PlanningPage() {
         </Table>
       </div>
     </section>
-  )
-}
-
-function TrainingCard({
-  trainingType,
-  description,
-  duration,
-  pse,
-  psr,
-  planned = false,
-}: {
-  id: string
-  date: Date
-  trainingType: string
-  duration: number
-  pse: number
-  description?: string
-  psr?: number
-  planned?: boolean
-}) {
-  return (
-    <div
-      className={cn(
-        'animate-[enter_0.8s] flex flex-col gap-0.5 bg-primary-medium w-full rounded-md p-2',
-        planned && 'bg-primary-night'
-      )}
-    >
-      <p className='text-xs text-white text-ellipsis line-clamp-2'>
-        Tipo: <strong>{trainingType}</strong>
-      </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-2'>
-        Duração: <strong>{duration} minutos</strong>
-      </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-2'>
-        PSE: <strong>{pse}</strong>
-      </p>
-      {psr && (
-        <p className='text-xs text-white text-ellipsis line-clamp-2'>
-          PSR: <strong>{psr}</strong>
-        </p>
-      )}
-      {description && (
-        <p className='text-xs text-white text-ellipsis line-clamp-2'>
-          Descrição: <strong>{description}</strong>
-        </p>
-      )}
-    </div>
   )
 }

@@ -1,9 +1,11 @@
 'use client'
 
+import { useParams } from 'next/navigation'
 import { startTransition, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
 import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
@@ -31,12 +33,9 @@ import {
   SelectContent,
   SelectItem,
   Slider,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
+  PseScalePopover,
+  PsrScalePopover,
 } from '@/components/ui'
-import { Info, Plus } from 'lucide-react'
-import { useParams } from 'next/navigation'
 
 interface Props {
   onSuccess(date: Date): void
@@ -232,60 +231,7 @@ export function PlanningForm({ onSuccess }: Props) {
                       </FormItem>
                     )}
                   />
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className='w-fit flex gap-1 items-center text-sm underline mt-1 hover:font-semibold'>
-                        <Info size={18} />
-                        <p>Ver escala</p>
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-fit'>
-                      <p className='font-semibold'>Escala de Percepção Subjetiva de Esforço</p>
-                      <ul className='flex flex-col gap-2 mt-2 p-2'>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold border border-gray-200'>0</div> •
-                          Absolutamente nada
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#B6D5F1] text-white'>1</div> •
-                          Extremamente fraco
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#89CED3] text-white'>2</div> •
-                          Muito fraco
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#30D187] text-white'>3</div> •
-                          Moderado
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#4EDF42] text-gray-900'>4</div> •
-                          Pouco forte
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#BBF31A] text-gray-900'>5</div> •
-                          Forte
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#FFFF00] text-gray-900'>6</div>
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#FFE700] text-gray-900'>7</div> •
-                          Muito forte
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#FF8900] text-white'>8</div>
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#FF2F00] text-white'>9</div>
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#E60000] text-white'>10</div> •
-                          Máximo
-                        </li>
-                      </ul>
-                    </PopoverContent>
-                  </Popover>
+                  <PseScalePopover />
                 </div>
                 <div className='flex flex-col gap-2'>
                   <FormField
@@ -317,60 +263,7 @@ export function PlanningForm({ onSuccess }: Props) {
                       </FormItem>
                     )}
                   />
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className='w-fit flex gap-1 items-center text-sm underline mt-1 hover:font-semibold'>
-                        <Info size={18} />
-                        <p>Ver escala</p>
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-fit'>
-                      <p className='font-semibold'>Escala de Percepção Subjetiva de Recuperação</p>
-                      <ul className='flex flex-col gap-2 mt-2 p-2'>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold border border-gray-200'>0</div> •
-                          Nenhuma recuperação
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#f0f3fa] text-gray-900'>1</div> •
-                          Muito pouco recuperado
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#E1EAF7] text-gray-900'>2</div> •
-                          Pouco recuperado
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#E2EAF7] text-gray-900'>3</div> •
-                          Recuperação moderada
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#D0DEF3] text-gray-900'>4</div> •
-                          Boa recuperação
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#C8D9F1] text-gray-900'>5</div> •
-                          Recuperação muito boa
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#B0CAEC] text-white'>6</div>
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#98BBE7] text-white'>7</div> •
-                          Recuperação extremamente boa
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#81AFE4] text-white'>8</div>
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#6BA5E1] text-white'>9</div>
-                        </li>
-                        <li className='flex gap-2'>
-                          <div className='size-6 text-center rounded-md font-bold bg-[#5C9FDF] text-white'>10</div> •
-                          Recuperado
-                        </li>
-                      </ul>
-                    </PopoverContent>
-                  </Popover>
+                  <PsrScalePopover />
                 </div>
               </div>
             </form>

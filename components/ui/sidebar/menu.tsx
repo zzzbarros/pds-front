@@ -19,8 +19,8 @@ export function MenuButton({ href, label, icon }: Props) {
     <Link href={href[0]}>
       <li
         className={twMerge(
-          'text-gray-600 hover:text-gray-800 text-nowrap flex items-center gap-2 hover:underline',
-          isActive && 'text-primary-medium font-bold underline'
+          'text-gray-600 hover:text-white hover:bg-primary-night text-nowrap flex items-center gap-2 py-2 px-4 rounded-sm w-full',
+          isActive && 'text-white bg-primary-medium font-semibold'
         )}
       >
         {icon}
