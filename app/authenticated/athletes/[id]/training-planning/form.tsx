@@ -58,7 +58,7 @@ const schema = z
         message: 'Tipo de Treino é obrigatório',
       })
       .default(''),
-    description: z.string().default(''),
+    description: z.string(),
     duration: z.coerce
       .number()
       .min(1, {
@@ -135,7 +135,9 @@ export function PlanningForm({ onSuccess, children, defaultValues }: Props) {
 
   return (
     <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
-      <DrawerTrigger asChild>{children}</DrawerTrigger>
+      <DrawerTrigger asChild tabIndex={0}>
+        {children}
+      </DrawerTrigger>
       <DrawerContent>
         <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-1'>
           <DrawerHeader className='text-center'>

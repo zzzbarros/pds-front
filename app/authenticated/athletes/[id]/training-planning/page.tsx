@@ -133,7 +133,7 @@ export default function PlanningPage() {
           </Button>
         </PlanningForm>
       </div>
-      <section tabIndex={1} className='grid grid-cols-7 min-h-[38vh] rounded-md border border-gray-200'>
+      <section tabIndex={0} className='grid grid-cols-7 min-h-[38vh] rounded-md border border-gray-200'>
         {weekDates.map((date) => {
           const isCurrentDay = compareDates(date, currentDay)
           const day = date.toLocaleDateString('pt-BR').split('/')[0]
