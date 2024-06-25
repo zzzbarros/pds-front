@@ -19,9 +19,9 @@ interface Props {
 export function BaseTrainingCard({ trainingType, description, duration, pse, psr, load, isPlanned, children }: Props) {
   return (
     <div
-      tabIndex={1}
+      tabIndex={0}
       className={cn(
-        'animate-[enter_0.8s] flex flex-col gap-0.5 bg-primary-medium w-full rounded-md p-2 group',
+        'animate-[enter_0.8s] flex flex-col gap-0.5 bg-primary-medium w-full rounded-md p-2 group/card',
         isPlanned && 'bg-primary-night'
       )}
     >
