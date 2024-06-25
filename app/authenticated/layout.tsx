@@ -28,7 +28,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <div className='w-full min-h-screen relative'>
       <header className='px-9 py-4 flex justify-between items-center border-b border-[#DEDFE3] fixed w-full bg-white z-20'>
         <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger className='rounded-[6px] flex items-center gap-2 p-0.5 px-3'>
             <p>{userName.name}</p>
             <Avatar>
