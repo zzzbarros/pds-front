@@ -1,7 +1,7 @@
 'use client'
 
-import { DialogComposition, type DialogProps } from '@/components/compositions/dialog'
 import { createContext, useContext, useRef, type ReactNode, type RefObject } from 'react'
+import { DialogComposition, type DialogProps } from '@/components/compositions/dialog'
 
 interface DialogContextProps {
   dialog: RefObject<DialogProps>

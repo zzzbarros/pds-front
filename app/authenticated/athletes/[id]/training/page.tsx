@@ -2,10 +2,11 @@
 
 import type { ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Plus, Trash } from 'lucide-react'
 import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
+  Button,
   Input,
   Label,
   Skeleton,
@@ -29,6 +30,8 @@ import {
 } from '@/lib/utils'
 import { PlanningForm } from './form'
 import { BaseTrainingCard } from '@/components/features'
+import { useDialogContext, useDrawerContext } from '@/contexts'
+import { ConfirmDeleteDialog } from '@/components/compositions'
 
 interface TrainingProps {
   id: string
@@ -73,6 +76,8 @@ export default function PlanningPage() {
   const week = searchParams.get('week') ?? getWeekNumberFromDate(currentDay)
   const weekDates = getWeekDatesFromInput(week)
   const showPlannedTrainings = (searchParams.get('showPlannedTrainings') || 'true') === 'true'
+  const { drawer } = useDrawerContext()
+  const { dialog } = useDialogContext()
 
   const firstDayOfWeek = weekDates[0]
   const lastDayOfWeek = weekDates[6]
@@ -157,13 +162,24 @@ export default function PlanningPage() {
           </div>
           {(isLoadingTraining || isLoadingPlanning) && <Spinner />}
         </div>
-        <PlanningForm
-          onSuccess={(date) => {
-            const createdInWeek = getWeekNumberFromDate(date)
-            if (createdInWeek === week) return mutateTrainings()
-            router.replace(pathname.concat(`?week=${createdInWeek}`))
+        <Button
+          className='px-10'
+          onClick={() => {
+            drawer.current?.open(
+              <PlanningForm
+                onSuccess={(date) => {
+                  drawer.current?.close()
+                  const createdInWeek = getWeekNumberFromDate(date)
+                  if (createdInWeek === week) return mutateTrainings()
+                  router.replace(pathname.concat(`?week=${createdInWeek}`))
+                }}
+              />
+            )
           }}
-        />
+        >
+          <Plus />
+          Cadastrar Treino
+        </Button>
       </div>
       <ul className='grid grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
         {weekDates?.map((date) => {
@@ -176,22 +192,113 @@ export default function PlanningPage() {
             <li
               key={day}
               className={cn(
-                'py-4 border-r border-gray-200 flex flex-col items-center rounded-t-sm',
+                'py-4 border-r border-gray-200 flex flex-col items-center rounded-t-sm group',
                 isCurrentDay && 'bg-gray-100'
               )}
             >
-              <p className='text-xl text-slate-950 font-semibold'>{day}</p>
+              <div className='flex gap-2 items-center w-full justify-center relative'>
+                <p className='text-xl text-slate-950 font-semibold relative'>{day}</p>
+                <button
+                  className='hidden group-hover:flex p-1 bg-background hover:brightness-95 rounded-full absolute right-1/4'
+                  onClick={() => {
+                    drawer.current?.open(
+                      <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
+                    )
+                  }}
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
               <p className='font-medium'>{textDay}</p>
 
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
                 {plannedTrainings?.map((plannedTraining) => (
                   <li key={plannedTraining.id}>
-                    <BaseTrainingCard {...plannedTraining} isPlanned />
+                    <BaseTrainingCard {...plannedTraining} isPlanned>
+                      <Button
+                        className='mt-2 w-full bg-primary-night border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+                        onClick={() => {
+                          drawer.current?.open(
+                            <PlanningForm
+                              method='POST'
+                              defaultValues={{
+                                date: plannedTraining.date,
+                                duration: plannedTraining.duration,
+                                description: plannedTraining.description ?? '',
+                                trainingTypeUuid:
+                                  typeof plannedTraining.trainingType === 'string'
+                                    ? plannedTraining.trainingType
+                                    : plannedTraining.trainingType.id,
+                              }}
+                              onSuccess={(date) => {
+                                drawer.current?.close()
+                                const createdInWeek = getWeekNumberFromDate(date)
+                                if (createdInWeek === week) return mutateTrainings()
+                                router.replace(pathname.concat(`?week=${createdInWeek}`))
+                              }}
+                            />
+                          )
+                        }}
+                      >
+                        <CircleCheckBig size={20} />
+                        <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Finalizar</span>
+                      </Button>
+                    </BaseTrainingCard>
                   </li>
                 ))}
                 {trainings?.map((training) => (
                   <li key={training.id}>
-                    <BaseTrainingCard {...training} />
+                    <BaseTrainingCard {...training}>
+                      <div className='flex gap-1 justify-end'>
+                        <Button
+                          className='mt-2 w-full border border-gray-200 animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+                          onClick={() => {
+                            drawer.current?.open(
+                              <PlanningForm
+                                method='PUT'
+                                defaultValues={{
+                                  id: training.id,
+                                  date: training.date,
+                                  duration: training.duration,
+                                  pse: training.pse,
+                                  description: training.description ?? '',
+                                  psr: training.psr as number,
+                                  trainingTypeUuid:
+                                    typeof training.trainingType === 'string'
+                                      ? training.trainingType
+                                      : training.trainingType.id,
+                                }}
+                                onSuccess={(date) => {
+                                  drawer.current?.close()
+                                  const createdInWeek = getWeekNumberFromDate(date)
+                                  if (createdInWeek === week) return mutateTrainings()
+                                  router.replace(pathname.concat(`?week=${createdInWeek}`))
+                                }}
+                              />
+                            )
+                          }}
+                        >
+                          <Edit size={20} />
+                          <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
+                        </Button>
+                        <Button
+                          className='mt-2 w-full border border-gray-200 animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+                          onClick={() => {
+                            dialog.current?.open(
+                              <ConfirmDeleteDialog
+                                route={'trainings/'.concat(training.id)}
+                                onClose={dialog.current.close}
+                                onSuccess={mutateTrainings}
+                                title='Você tem certeza que deseja remover esse treino?'
+                              />
+                            )
+                          }}
+                        >
+                          <Trash size={20} />
+                          <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Excluir</span>
+                        </Button>
+                      </div>
+                    </BaseTrainingCard>
                   </li>
                 ))}
               </ul>
@@ -312,3 +419,5 @@ export default function PlanningPage() {
     </section>
   )
 }
+
+

@@ -116,3 +116,5 @@ export {
   DrawerTitle,
   DrawerDescription,
 }
+
+export type DrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root>
