@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Input } from './input'
 import { Button } from './button'
@@ -31,6 +31,10 @@ export function SearchInput({ value, placeholder }: { value: string; placeholder
     (value: string) => router.push(pathname.concat('?').concat(createQueryString('search', value))),
     [pathname, createQueryString]
   )
+
+  useEffect(() => {
+    if (!search) handleSearch('')
+  }, [search])
 
   return (
     <div className='flex w-full'>
