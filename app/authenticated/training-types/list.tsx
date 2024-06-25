@@ -1,15 +1,17 @@
+import { PackageOpen } from 'lucide-react'
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
   Pagination,
   TableCaption,
+  TableTd,
+  StatusBadge,
 } from '@/components/ui'
 import { serverFetcher } from '@/services'
-import { PackageOpen } from 'lucide-react'
+import { TrainingTypeListOptions } from './components'
 
 interface TrainingTypesProps {
   id: string
@@ -38,14 +40,20 @@ export default async function List({ page, search }: Props) {
             <TableRow>
               <TableHead>Tipo do Treino</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className='text-right'>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {!!trainingTypes?.length &&
               trainingTypes.map(({ id, name, isEnabled }) => (
                 <TableRow key={id}>
-                  <TableCell href={`/authenticated/training-types/${id}`}>{name}</TableCell>
-                  <TableCell href={`/authenticated/training-types/${id}`}>{isEnabled ? 'Ativo' : 'Inativo'}</TableCell>
+                  <TableTd>{name}</TableTd>
+                  <TableTd>
+                    <StatusBadge {...{ isEnabled }} />
+                  </TableTd>
+                  <TableTd className='flex justify-end w-full'>
+                    <TrainingTypeListOptions {...{ id, isEnabled }} />
+                  </TableTd>
                 </TableRow>
               ))}
           </TableBody>

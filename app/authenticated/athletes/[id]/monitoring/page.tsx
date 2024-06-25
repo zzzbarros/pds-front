@@ -5,10 +5,16 @@ import { ChangeEvent, useMemo } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { clientFetcher } from '@/services'
-import { Button, Input, Spinner } from '@/components/ui'
-import { DailyLoadChart, WeekLoadChart, WellBeingChart, DailyDurationChart } from '@/components/charts'
 import {
-  compareDates,
+  Button,
+  DailyLoadChart,
+  WeekLoadChart,
+  WellBeingChart,
+  DailyDurationChart,
+  Input,
+  Spinner,
+} from '@/components/ui'
+import {
   getCurrentWeekDates,
   getNextWeek,
   getPreviousWeek,

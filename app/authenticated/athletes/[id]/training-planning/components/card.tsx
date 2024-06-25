@@ -3,8 +3,7 @@
 import { Edit, Trash } from 'lucide-react'
 import { useDialogContext } from '@/contexts'
 import { ConfirmDeleteDialog } from '@/components/compositions'
-import { BaseTrainingCard } from '@/components/features'
-import { Button } from '@/components/ui'
+import { BaseTrainingCard, Button } from '@/components/ui'
 import { PlanningForm } from '../form'
 import type { BaseTrainingProps } from '../page'
 
@@ -30,13 +29,13 @@ export function TrainingCard({
             trainingId: id,
           }}
         >
-          <Button className='mt-2 w-full border border-gray-200 focus:flex animate-[enter_0.8s] group/button p-3 hover:brightness-125'>
+          <Button className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'>
             <Edit size={20} />
             <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
           </Button>
         </PlanningForm>
         <Button
-          className='mt-2 w-full border border-gray-200 animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+          className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
           onClick={() => {
             dialog.current?.open(
               <ConfirmDeleteDialog

@@ -1,3 +1,4 @@
+import { PackageOpen } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -7,9 +8,11 @@ import {
   Pagination,
   TableCaption,
   TableCell,
+  TableTd,
+  StatusBadge,
 } from '@/components/ui'
 import { serverFetcher } from '@/services'
-import { PackageOpen } from 'lucide-react'
+import { AthleteListOptions } from './components'
 
 interface AthleteProps {
   id: string
@@ -42,6 +45,7 @@ export default async function List({ page, search }: Props) {
               <TableHead>Nome do atleta</TableHead>
               <TableHead>E-mail</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className='text-right'>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -50,7 +54,12 @@ export default async function List({ page, search }: Props) {
                 <TableRow key={id}>
                   <TableCell href={athleteDetailsRoute(id)}>{name}</TableCell>
                   <TableCell href={athleteDetailsRoute(id)}>{email}</TableCell>
-                  <TableCell href={athleteDetailsRoute(id)}>{isEnabled ? 'Ativo' : 'Inativo'}</TableCell>
+                  <TableCell href={athleteDetailsRoute(id)}>
+                    <StatusBadge {...{ isEnabled }} />
+                  </TableCell>
+                  <TableTd className='flex justify-end w-full'>
+                    <AthleteListOptions {...{ isEnabled, id }} />
+                  </TableTd>
                 </TableRow>
               ))}
           </TableBody>

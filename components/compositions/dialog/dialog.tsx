@@ -1,5 +1,5 @@
-import { forwardRef, useImperativeHandle, useState, type ReactNode, type MouseEvent } from 'react'
-import { Dialog, type DialogProps as RootProps } from '../ui'
+import { forwardRef, useImperativeHandle, useState, type ReactNode } from 'react'
+import { Dialog, type DialogProps as RootProps } from '../../ui'
 
 export interface DialogProps {
   open(children: React.ReactNode): void
