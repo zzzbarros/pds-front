@@ -1,4 +1,4 @@
-import { PackageOpen, SquareCheck, SquareX } from 'lucide-react'
+import { PackageOpen } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
   TableCaption,
   TableCell,
   TableTd,
+  StatusBadge,
 } from '@/components/ui'
 import { serverFetcher } from '@/services'
 import { AthleteListOptions } from './components'
@@ -44,7 +45,7 @@ export default async function List({ page, search }: Props) {
               <TableHead>Nome do atleta</TableHead>
               <TableHead>E-mail</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className='w-full flex justify-end items-center'>Ações</TableHead>
+              <TableHead className='text-right'>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -54,14 +55,7 @@ export default async function List({ page, search }: Props) {
                   <TableCell href={athleteDetailsRoute(id)}>{name}</TableCell>
                   <TableCell href={athleteDetailsRoute(id)}>{email}</TableCell>
                   <TableCell href={athleteDetailsRoute(id)}>
-                    <div className='flex gap-2 items-center min-w-24'>
-                      {isEnabled ? (
-                        <SquareCheck className='stroke-2 size-4' />
-                      ) : (
-                        <SquareX className='stroke-2 size-4' />
-                      )}
-                      {isEnabled ? 'Ativo' : 'Inativo'}
-                    </div>
+                    <StatusBadge {...{ isEnabled }} />
                   </TableCell>
                   <TableTd className='flex justify-end w-full'>
                     <AthleteListOptions {...{ isEnabled, id }} />
