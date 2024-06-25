@@ -23,7 +23,7 @@ export function TrainingTypeListOptions({ isEnabled, id }: { id: string; isEnabl
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className='py-1 px-1 hover:brightness-95 bg-white rounded-sm'>
+        <button className='py-1 px-1 hover:brightness-95 bg-white rounded-md'>
           <EllipsisVertical />
         </button>
       </DropdownMenuTrigger>
