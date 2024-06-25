@@ -29,14 +29,14 @@ export function TrainingTypeListOptions({ isEnabled, id }: { id: string; isEnabl
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-fit'>
         <DropdownMenuItem asChild>
-          <button className='w-full text-left flex gap-2 items-center' onClick={openEdit}>
+          <button className='w-full text-left flex gap-2 items-center cursor-pointer' onClick={openEdit}>
             <Pencil className='stroke-2 size-4' />
             Editar
           </button>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <button
-            className='w-full text-left flex gap-2 items-center'
+            className='w-full text-left flex gap-2 items-center cursor-pointer'
             onClick={() => {
               dialog.current?.open(
                 <ConfirmStatusDialog
