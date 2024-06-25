@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Plus, Trash } from 'lucide
 import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
+  BaseTrainingCard,
   Button,
   Input,
   Label,
@@ -29,7 +30,6 @@ import {
   getWeekNumberFromDate,
 } from '@/lib/utils'
 import { PlanningForm } from './form'
-import { BaseTrainingCard } from '@/components/features'
 import { useDialogContext, useDrawerContext } from '@/contexts'
 import { ConfirmDeleteDialog } from '@/components/compositions'
 
@@ -199,7 +199,8 @@ export default function PlanningPage() {
               <div className='flex gap-2 items-center w-full justify-center relative'>
                 <p className='text-xl text-slate-950 font-semibold relative'>{day}</p>
                 <button
-                  className='hidden group-hover:flex p-1 bg-background hover:brightness-95 rounded-full absolute right-1/4'
+                  data-current-day={isCurrentDay}
+                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/4 animate-in'
                   onClick={() => {
                     drawer.current?.open(
                       <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
@@ -216,7 +217,7 @@ export default function PlanningPage() {
                   <li key={plannedTraining.id}>
                     <BaseTrainingCard {...plannedTraining} isPlanned>
                       <Button
-                        className='mt-2 w-full bg-primary-night border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+                        className='mt-2 w-full bg-primary-night border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
                         onClick={() => {
                           drawer.current?.open(
                             <PlanningForm
@@ -251,7 +252,7 @@ export default function PlanningPage() {
                     <BaseTrainingCard {...training}>
                       <div className='flex gap-1 justify-end'>
                         <Button
-                          className='mt-2 w-full border border-gray-200 animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+                          className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
                           onClick={() => {
                             drawer.current?.open(
                               <PlanningForm
@@ -282,7 +283,7 @@ export default function PlanningPage() {
                           <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
                         </Button>
                         <Button
-                          className='mt-2 w-full border border-gray-200 animate-[enter_0.8s] group/button p-3 hover:brightness-125'
+                          className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
                           onClick={() => {
                             dialog.current?.open(
                               <ConfirmDeleteDialog
@@ -306,7 +307,7 @@ export default function PlanningPage() {
           )
         })}
       </ul>
-      <div className='w-full rounded-md mt-6  border border-gray-200 '>
+      <div className='w-full rounded-md mt-6  border border-gray-200'>
         <Table>
           <TableHeader>
             <TableRow>
