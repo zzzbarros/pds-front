@@ -3,7 +3,7 @@
 import { getCookie } from 'cookies-next'
 import { redirect } from 'next/navigation'
 
-const baseUrl = process.env.api ?? ''
+const baseUrl = process.env.API_URL ?? ''
 
 export async function clientFetcher<T = any>(url: string, props?: RequestInit | undefined) {
   const user = getCookie('user')
