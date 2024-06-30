@@ -3,7 +3,7 @@
 import { getUser } from '@/app/auth/get-user'
 import { redirect } from 'next/navigation'
 
-const baseUrl = process.env.api ?? ''
+const baseUrl = process.env.API_URL ?? ''
 
 export async function serverFetcher<T = any>(url: string, props: RequestInit | undefined) {
   const { token } = getUser()
