@@ -19,7 +19,10 @@ export function TabsComponents({ children }: Props) {
 
   return (
     <div className='w-full h-screen flex flex-col p-6 md:p-10 justify-between items-center '>
-      <Tabs defaultValue={defaultTabByRoute[route]} className='w-full flex flex-col gap-20'>
+      <Tabs
+        defaultValue={defaultTabByRoute[route] ?? defaultTabByRoute.register}
+        className='w-full flex flex-col gap-20 focus-visible:border-0'
+      >
         <TabsList className='mx-auto'>
           <TabsTrigger value={AuthTabEnum.REGISTER}>Criar Conta</TabsTrigger>
           <TabsTrigger value={AuthTabEnum.LOGIN}>Entrar</TabsTrigger>

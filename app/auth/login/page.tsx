@@ -79,7 +79,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className='w-full text-center'>
+    <section className='w-full text-center' tabIndex={-1}>
       <h1 className='text-2xl text-primary-medium font-bold'>Acesse sua conta</h1>
       <p className='mt-[6px] mb-6 text-zinc-500 font-medium text-balance'>
         Insira seu e-mail para acessar o painel do usuário.
