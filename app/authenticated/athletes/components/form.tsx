@@ -84,6 +84,7 @@ export function AthleteForm({ closeDrawer, defaultValues }: Props) {
         toast({
           title: res.data.title,
           description: res.data.message,
+          variant: 'success',
         })
       })
     } else {
