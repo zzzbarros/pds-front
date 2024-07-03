@@ -52,20 +52,24 @@ class API {
     login: async (data: {
       email: string
       password: string
-    }): Promise<{
-      ok: boolean
-      title?: string
-      message?: string
-      data?: {
-        token: string
-        refreshToken: string
-        user: {
-          name: string
-          uuid: string
-          type: string
+    }): Promise<
+      | {
+          ok: true
+          data: {
+            token: string
+            refreshToken: string
+            user: {
+              name: string
+              uuid: string
+              type: string
+            }
+          }
         }
-      }
-    }> => {
+      | {
+          ok: false
+          data: { title: string; message: string }
+        }
+    > => {
       try {
         const res = await fetch(this.baseUrl.concat('auth/login'), {
           method: 'POST',
@@ -77,8 +81,7 @@ class API {
       } catch {
         return {
           ok: false,
-          title: 'Desculpe, parece que ocorreu um erro.',
-          message: 'Tente novamente em instantes...',
+          data: { title: 'Desculpe, parece que ocorreu um erro.', message: 'Tente novamente em instantes...' },
         }
       }
     },
