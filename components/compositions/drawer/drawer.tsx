@@ -1,5 +1,5 @@
-import { forwardRef, useImperativeHandle, useState, type ReactNode, type MouseEvent } from 'react'
-import { Drawer, DrawerContent, type DrawerProps as RootProps } from '../../ui'
+import { forwardRef, useImperativeHandle, useState, type ReactNode } from 'react'
+import { Drawer, type DrawerProps as RootProps } from '../../ui'
 
 export interface DrawerProps {
   open(children: React.ReactNode): void
