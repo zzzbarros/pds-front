@@ -13,6 +13,7 @@ class API {
             method: 'POST',
             headers: this.headers,
             body: JSON.stringify(data),
+            cache: 'no-cache',
           })
           const response = await res.json()
           return { ok: res.ok, title: response.title, message: response.message, conflict: res.status === 409 }
@@ -38,6 +39,7 @@ class API {
           method: 'POST',
           headers: this.headers,
           body: JSON.stringify(data),
+          cache: 'no-cache',
         })
         const response = await res.json()
         return { ok: res.ok, title: response.title, message: response.message }
@@ -75,6 +77,7 @@ class API {
           method: 'POST',
           headers: this.headers,
           body: JSON.stringify(data),
+          cache: 'no-cache',
         })
         const response = await res.json()
         return { ok: res.ok, data: response }

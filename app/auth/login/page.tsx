@@ -68,6 +68,7 @@ export default function LoginPage() {
     if (res.ok) {
       setCookie('user', JSON.stringify(res.data))
       router.push('/authenticated')
+      router.refresh()
     } else {
       form.setError('serverError', {})
       if (res?.data?.title && res?.data?.message) {
