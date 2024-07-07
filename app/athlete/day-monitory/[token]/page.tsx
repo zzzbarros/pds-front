@@ -5,7 +5,7 @@ import { startTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Angry, Frown, Annoyed, Smile, Laugh } from 'lucide-react'
+import { Angry, Frown, Annoyed, Smile, Laugh, CircleCheck, Send } from 'lucide-react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, toast } from '@/components/ui'
 import { BaseTemplate } from '@/components/templates'
 import { clientFetcher } from '@/services'
@@ -49,7 +49,13 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
   const { token } = params
   const { name = 'atleta' } = searchParams
 
-  const form = useForm<FormProps>({
+  const {
+    watch,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { isSubmitting, isSubmitSuccessful },
+  } = useForm<FormProps>({
     resolver: zodResolver(schema),
     defaultValues: {
       accordion: questions[0].value,
@@ -61,20 +67,20 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
     },
   })
 
-  const accordion = form.watch('accordion')
+  const accordion = watch('accordion')
 
-  const completedAnswers = Object.values(form.getValues()).every((value) => value !== null)
+  const completedAnswers = Object.values(getValues()).every((value) => value !== null)
 
   function setAnswer(key: string, value: number) {
     const currentAnswerIndex = questions.findIndex(({ value }) => value === key)
     const nextAnswerIndex = currentAnswerIndex < questions.length - 1 ? currentAnswerIndex + 1 : null
     startTransition(() => {
-      form.setValue(key as keyof FormProps, value, {
+      setValue(key as keyof FormProps, value, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true,
       })
-      !!nextAnswerIndex && form.setValue('accordion', questions[nextAnswerIndex].value)
+      !!nextAnswerIndex && setValue('accordion', questions[nextAnswerIndex].value)
     })
   }
 
@@ -88,16 +94,44 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
       description: response?.data?.message,
       variant: response.ok ? 'success' : 'destructive',
     })
+    if (!response.ok) throw response
+  }
+
+  if (isSubmitSuccessful) {
+    return (
+      <BaseTemplate>
+        <section className='w-full flex justify-center items-center p-3'>
+          <div
+            onSubmit={handleSubmit(submit)}
+            className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-3 md:gap-4 h-fit text-center text-balance'
+          >
+            <span className='hidden xl:inline'>
+              <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
+            </span>
+            <span className='text-primary-night text-xl md:text-2xl font-semibold'>
+              Bem-estar enviado com sucesso, {name}!
+            </span>
+            <h1 className='text-primary-night text-lg md:text-xl font-medium'>
+              Obrigado nos informar como você está se sentindo hoje,
+              <br /> as informações serão importantes para o planejamento dos próximos treinos.
+            </h1>
+            <CircleCheck size={80} className='text-primary-medium' />
+          </div>
+        </section>
+      </BaseTemplate>
+    )
   }
 
   return (
     <BaseTemplate>
       <section className='w-full flex justify-center p-3'>
         <form
-          onSubmit={form.handleSubmit(submit)}
+          onSubmit={handleSubmit(submit)}
           className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-3 md:gap-4'
         >
-          <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
+          <span className='hidden xl:inline'>
+            <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
+          </span>
           <span className='text-primary-night text-xl md:text-2xl font-semibold'>Olá {name}, bom dia!</span>
           <h1 className='text-primary-night text-lg md:text-xl font-medium text-center text-balance'>
             Conte-nos como se sente hoje...
@@ -106,20 +140,20 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
           <Accordion
             type='single'
             value={accordion}
-            onValueChange={(key) => form.setValue('accordion', key)}
+            onValueChange={(key) => setValue('accordion', key)}
             className='w-full'
           >
             {questions.map((question) => (
               <AccordionItem value={question.value} key={question.value}>
                 <AccordionTrigger>{question.label}</AccordionTrigger>
                 <AccordionContent className='flex flex-col gap-2'>
-                  <ul className='w-full flex gap-2 justify-between'>
+                  <ul className='w-full flex flex-col md:flex-row gap-2 justify-between'>
                     {options.map(({ icon, label, value }) => (
                       <li className='w-full' key={value}>
                         <button
                           type='button'
-                          data-active={form.watch(question.value as keyof FormProps) === value}
-                          className='w-full flex justify-center gap-1 items-center border border-primary-night rounded-md py-1.5 px-2.5 font-medium text-primary-night text-sm data-[active=true]:bg-primary data-[active=true]:text-white data-[active=true]:border-primary hover:bg-primary-medium data-[active=true]:hover:bg-primary-medium hover:border-primary-medium hover:text-white'
+                          data-active={watch(question.value as keyof FormProps) === value}
+                          className='w-full flex md:justify-center gap-1 items-center border border-primary-night rounded-md py-1.5 px-4 md:px-2.5 font-medium text-primary-night text-sm data-[active=true]:bg-primary data-[active=true]:text-white data-[active=true]:border-primary hover:bg-primary-medium data-[active=true]:hover:bg-primary-medium hover:border-primary-medium hover:text-white'
                           onClick={() => setAnswer(question.value, value)}
                         >
                           {icon}
@@ -132,7 +166,8 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
               </AccordionItem>
             ))}
           </Accordion>
-          <Button type='submit' className='mt-4' disabled={!completedAnswers}>
+          <Button isLoading={isSubmitting} type='submit' className='mt-4' disabled={!completedAnswers}>
+            {!isSubmitting && <Send />}
             Enviar Respostas
           </Button>
         </form>
