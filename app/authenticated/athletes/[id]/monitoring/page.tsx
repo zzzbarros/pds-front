@@ -50,7 +50,14 @@ interface MonotonyMonitoringResponseDto {
   }
 }
 
-const wellBeing = [5, 4, 5, 3, 5, 3, 4]
+interface GetWellBeingMonitoringResponseDto {
+  days: Date[]
+  sleep: number[]
+  disposition: number[]
+  musclePain: number[]
+  stress: number[]
+  humor: number[]
+}
 
 export default function Monitoring() {
   const { id = '' } = useParams()
@@ -108,6 +115,26 @@ export default function Monitoring() {
     }
   )
 
+  const {
+    data: wellBeingMonitoring = {} as GetWellBeingMonitoringResponseDto,
+    isLoading: isLoadingWellBeingMonitoring,
+  } = useSWR(['well-being-week-monitory', firstDayOfWeek, lastDayOfWeek, id], async () => {
+    const response = await clientFetcher(
+      `monitoring/well-being?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
+    )
+    if (response.ok) return response.data as GetWellBeingMonitoringResponseDto
+    return {
+      days: [] as Date[],
+      disposition: [],
+      stress: [],
+      sleep: [],
+      humor: [],
+      musclePain: [],
+    } as GetWellBeingMonitoringResponseDto
+  })
+
+  const isLoading = isLoadingWellBeingMonitoring || isLoadingMonotony || isLoadingWeekMonitoring
+
   const { labels, pse, psr, duration, performedTraining, plannedDuration, plannedPse, plannedTraining } =
     useMemo(() => {
       if (!weekMonitoring) {
@@ -157,7 +184,7 @@ export default function Monitoring() {
   }
 
   return (
-    <section className=' w-full h-full flex flex-col gap-6 print:gap-20'>
+    <section className=' w-full h-full flex flex-col gap-6 print:gap-4'>
       <div className='flex justify-between w-full'>
         <div className='flex gap-4 items-center w-full'>
           <Input type='week' className='max-w-44 print:hidden' onChange={handleWeekInput} value={week} />
@@ -172,7 +199,7 @@ export default function Monitoring() {
               <ArrowRight size={16} />
             </button>
           </div>
-          {isLoadingWeekMonitoring && <Spinner />}
+          {isLoading && <Spinner />}
         </div>
         <Button
           className='px-10 print:hidden'
@@ -183,17 +210,16 @@ export default function Monitoring() {
           Imprimir
         </Button>
       </div>
+      <WeekLoadChart {...monotonyMonitoring} />
       <DailyLoadChart {...{ labels, psr, pse, plannedTraining, performedTraining }} />
       <DailyDurationChart {...{ labels, pse, plannedPse, duration, plannedDuration }} />
-      <WeekLoadChart {...monotonyMonitoring} />
-      {/* TODO: Integrar com API / REMOVER MOCK  */}
       <WellBeingChart
         {...{ labels }}
-        fatigue={wellBeing}
-        humor={wellBeing}
-        musclePain={wellBeing}
-        nightOfSleep={wellBeing}
-        stress={wellBeing}
+        fatigue={wellBeingMonitoring.disposition}
+        humor={wellBeingMonitoring.humor}
+        musclePain={wellBeingMonitoring.musclePain}
+        nightOfSleep={wellBeingMonitoring.sleep}
+        stress={wellBeingMonitoring.stress}
       />
     </section>
   )

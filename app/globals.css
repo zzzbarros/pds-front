@@ -79,6 +79,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  @media print {
+    .page-break {
+      clear: both;
+      page-break-after: always;
+    }
+  }
 }
 ::-webkit-scrollbar {
   width: 12px;

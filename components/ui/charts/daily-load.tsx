@@ -15,6 +15,7 @@ import {
 } from 'chart.js'
 import { Chart } from 'react-chartjs-2'
 import { options } from './options'
+import { ChartWrapper } from './wrapper'
 
 ChartJS.register(
   LinearScale,
@@ -84,9 +85,8 @@ export function DailyLoadChart(props: Props) {
   }
 
   return (
-    <div className='w-full h-full border border-gray-200 rounded-md p-6'>
-      <h2 className='font-semibold'>Carga diária</h2>
+    <ChartWrapper title='Carga diária' className='page-break print:mt-16'>
       <Chart type='bar' data={data} options={options} />
-    </div>
+    </ChartWrapper>
   )
 }
