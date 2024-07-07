@@ -167,7 +167,7 @@ const Pagination = ({ page: currentPage, lastPage, total, size, ...props }: Prop
           </>
         )}
         <PaginationItem>
-          <PaginationNext href={createPageUrl(nextPage)} isDisabled={currentPage === lastPage} />
+          <PaginationNext href={createPageUrl(nextPage)} isDisabled={currentPage >= lastPage} />
         </PaginationItem>
       </PaginationContent>
     </Root>
