@@ -36,7 +36,7 @@ export function ConfirmDeleteDialog({
       toast({
         title: response.data.title,
         description: response.data.message,
-        ...(!response.ok && { variant: 'destructive' }),
+        variant: response.ok ? 'success' : 'destructive',
       })
       onSuccess()
     } catch {

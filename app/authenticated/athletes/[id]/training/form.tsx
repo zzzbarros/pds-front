@@ -117,6 +117,7 @@ export function PlanningForm({ onSuccess, defaultValues, method = 'POST' }: Prop
       toast({
         title: res.data.title,
         description: res.data.message,
+        variant: 'success',
       })
     }
   }

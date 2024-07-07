@@ -84,6 +84,7 @@ export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
         toast({
           title: res.data.title,
           description: res.data.message,
+          variant: 'success',
         })
       })
     }

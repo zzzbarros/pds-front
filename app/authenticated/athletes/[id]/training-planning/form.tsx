@@ -124,6 +124,7 @@ export function PlanningForm({ onSuccess, children, defaultValues }: Props) {
         toast({
           title: res.data.title,
           description: res.data.message,
+          variant: 'success',
         })
       })
     }

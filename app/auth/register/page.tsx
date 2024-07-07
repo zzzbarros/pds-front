@@ -69,10 +69,10 @@ export default function RegisterPage() {
     return (
       <div className='w-full text-center'>
         <h1 className='text-2xl text-primary-medium font-bold'>Verifique seu E-mail</h1>
-        <p className='mt-[6px] mb-6 text-zinc-500 font-medium text-balance'>
+        <p className='mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
           Enviamos para seu e-mail a confirmação dos próximos passos...
         </p>
-        <p className='mt-[6px] mb-6 text-zinc-500 font-medium'>
+        <p className='mt-[6px] mb-6 text-zinc-600 font-medium'>
           E-mail: <span className='font-bold text-lg'>{form.watch('email')}</span>.
         </p>
       </div>
@@ -81,7 +81,7 @@ export default function RegisterPage() {
   return (
     <section className='w-full text-center' tabIndex={-1}>
       <h1 className='text-2xl text-primary-medium font-bold'>Crie sua conta</h1>
-      <p className='mt-[6px] mb-6 text-zinc-500 font-medium text-balance'>
+      <p className='mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
         Insira seu e-mail para continuar com a criação do usuário.
       </p>
       <Form {...form}>

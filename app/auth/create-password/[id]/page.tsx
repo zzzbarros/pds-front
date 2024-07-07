@@ -89,6 +89,7 @@ export default function CreatePassword() {
       toast({
         title: res.title,
         description: res.message,
+        variant: 'success',
       })
     }
   }
@@ -96,7 +97,7 @@ export default function CreatePassword() {
   return (
     <section className='w-full text-center'>
       <h1 className='text-2xl text-primary-medium font-bold'>Conclua a sua conta</h1>
-      <p className='mt-[6px] mb-6 text-zinc-500 font-medium'>
+      <p className='mt-[6px] mb-6 text-zinc-600 font-medium'>
         Crie a sua senha para concluir o cadastro na plataforma.
       </p>
       <Form {...form}>

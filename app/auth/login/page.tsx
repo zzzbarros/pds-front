@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
+  Checkbox,
   Form,
   FormControl,
   FormField,
@@ -14,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Label,
   useToast,
 } from '@/components/ui'
 import { services } from '@/services'
@@ -36,6 +38,7 @@ const schema = z
         message: 'Senha é obrigatório',
       })
       .default(''),
+    keepLogin: z.boolean().default(false),
     serverError: z.string().default('').optional(),
   })
   .transform(({ email, password }) => ({ email, password }))
@@ -63,16 +66,16 @@ export default function LoginPage() {
     const res = await services.auth.login(data as OutputFormProps)
 
     if (res.ok) {
-      if (res?.data) {
-        setCookie('user', JSON.stringify(res.data))
-        router.push('/authenticated')
-      }
+      setCookie('user', JSON.stringify(res.data))
+      router.push('/authenticated')
+      router.refresh()
     } else {
       form.setError('serverError', {})
-      if (res?.title && res?.message) {
+      if (res?.data?.title && res?.data?.message) {
         toast({
-          title: res.title,
-          description: res.message,
+          title: res.data.title,
+          description: res.data.message,
+          variant: 'destructive',
         })
       }
     }
@@ -81,7 +84,7 @@ export default function LoginPage() {
   return (
     <section className='w-full text-center' tabIndex={-1}>
       <h1 className='text-2xl text-primary-medium font-bold'>Acesse sua conta</h1>
-      <p className='mt-[6px] mb-6 text-zinc-500 font-medium text-balance'>
+      <p className='mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
         Insira seu e-mail para acessar o painel do usuário.
       </p>
       <Form {...form}>
@@ -94,7 +97,7 @@ export default function LoginPage() {
               <FormField
                 key={name}
                 control={form.control}
-                name={name as keyof FormProps}
+                name={name as keyof Omit<FormProps, 'keepLogin'>}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{label}</FormLabel>
@@ -111,6 +114,16 @@ export default function LoginPage() {
                 )}
               />
             ))}
+            <fieldset className='flex items-center space-x-2 mt-1'>
+              <Checkbox
+                id='keepLogin'
+                checked={form.watch('keepLogin')}
+                onCheckedChange={(checked) => form.setValue('keepLogin', checked as boolean)}
+              />
+              <Label className='text-zinc-700' htmlFor='keepLogin'>
+                Manter-se conectado
+              </Label>
+            </fieldset>
           </div>
           <Button isLoading={form.formState.isSubmitting} type='submit'>
             Continuar

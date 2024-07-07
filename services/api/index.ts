@@ -13,6 +13,7 @@ class API {
             method: 'POST',
             headers: this.headers,
             body: JSON.stringify(data),
+            cache: 'no-cache',
           })
           const response = await res.json()
           return { ok: res.ok, title: response.title, message: response.message, conflict: res.status === 409 }
@@ -38,6 +39,7 @@ class API {
           method: 'POST',
           headers: this.headers,
           body: JSON.stringify(data),
+          cache: 'no-cache',
         })
         const response = await res.json()
         return { ok: res.ok, title: response.title, message: response.message }
@@ -52,33 +54,37 @@ class API {
     login: async (data: {
       email: string
       password: string
-    }): Promise<{
-      ok: boolean
-      title?: string
-      message?: string
-      data?: {
-        token: string
-        refreshToken: string
-        user: {
-          name: string
-          uuid: string
-          type: string
+    }): Promise<
+      | {
+          ok: true
+          data: {
+            token: string
+            refreshToken: string
+            user: {
+              name: string
+              uuid: string
+              type: string
+            }
+          }
         }
-      }
-    }> => {
+      | {
+          ok: false
+          data: { title: string; message: string }
+        }
+    > => {
       try {
         const res = await fetch(this.baseUrl.concat('auth/login'), {
           method: 'POST',
           headers: this.headers,
           body: JSON.stringify(data),
+          cache: 'no-cache',
         })
         const response = await res.json()
         return { ok: res.ok, data: response }
       } catch {
         return {
           ok: false,
-          title: 'Desculpe, parece que ocorreu um erro.',
-          message: 'Tente novamente em instantes...',
+          data: { title: 'Desculpe, parece que ocorreu um erro.', message: 'Tente novamente em instantes...' },
         }
       }
     },

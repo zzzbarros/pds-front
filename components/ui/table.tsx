@@ -72,7 +72,7 @@ const TableCell = React.forwardRef<
   React.TdHTMLAttributes<HTMLTableCellElement> & { href: string }
 >(({ href, className, children, ...props }, ref) => (
   <TableTd ref={ref} className={cn('p-0', className)} {...props}>
-    <Link href={href} className='p-4 flex w-full'>
+    <Link prefetch={true} href={href} className='p-4 flex w-full'>
       {children}
     </Link>
   </TableTd>
