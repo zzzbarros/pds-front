@@ -3,6 +3,7 @@
 import React from 'react'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
+import { ChartWrapper } from './wrapper'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -23,14 +24,6 @@ export function WellBeingChart(props: Props) {
     interaction: {
       mode: 'index' as const,
       intersect: false,
-    },
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
     },
   }
 
@@ -76,9 +69,8 @@ export function WellBeingChart(props: Props) {
   }
 
   return (
-    <div className='w-full  border border-gray-200 rounded-md p-6'>
-      <h2 className='font-semibold'>Monitoramento de Bem-Estar</h2>
+    <ChartWrapper title='Monitoramento de Bem-Estar' className='print:mt-16'>
       <Bar options={options} data={data} />
-    </div>
+    </ChartWrapper>
   )
 }
