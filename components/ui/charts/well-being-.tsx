@@ -1,11 +1,13 @@
 'use client'
 
 import React from 'react'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 import { ChartWrapper } from './wrapper'
+import { options as BASE_OPTIONS } from './options'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels)
 
 interface Props {
   labels: string[]
@@ -19,12 +21,12 @@ interface Props {
 export function WellBeingChart(props: Props) {
   const { labels, musclePain, fatigue, humor, nightOfSleep, stress } = props
 
+  const { plugins, interaction, responsive } = BASE_OPTIONS
+
   const options = {
-    responsive: true,
-    interaction: {
-      mode: 'index' as const,
-      intersect: false,
-    },
+    plugins,
+    interaction,
+    responsive,
   }
 
   const data = {
@@ -38,8 +40,8 @@ export function WellBeingChart(props: Props) {
         stack: 'Stack 0',
       },
       {
-        label: 'Noite de Sono',
-        data: nightOfSleep,
+        label: 'Stress',
+        data: stress,
         backgroundColor: '#313B56',
         borderRadius: 8,
         stack: 'Stack 0',
@@ -59,8 +61,8 @@ export function WellBeingChart(props: Props) {
         stack: 'Stack 0',
       },
       {
-        label: 'Stress',
-        data: stress,
+        label: 'Noite de Sono',
+        data: nightOfSleep,
         backgroundColor: '#DEDFE3',
         borderRadius: 8,
         stack: 'Stack 0',
@@ -70,7 +72,7 @@ export function WellBeingChart(props: Props) {
 
   return (
     <ChartWrapper title='Monitoramento de Bem-Estar' className='print:mt-16'>
-      <Bar options={options} data={data} />
+      <Bar options={options} data={data} width={100} height={50} />
     </ChartWrapper>
   )
 }
