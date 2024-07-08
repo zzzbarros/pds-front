@@ -106,8 +106,8 @@ export function AthleteForm({ closeDrawer, defaultValues }: Props) {
 
   return (
     <DrawerContent>
-      <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-1'>
-        <DrawerHeader className='text-center'>
+      <div className='flex flex-col justify-center w-full sm:w-2/3 md:w-2/5 h-full mx-auto gap-1'>
+        <DrawerHeader>
           <DrawerTitle>{actionTitle} atleta</DrawerTitle>
           <DrawerDescription>
             Preencha os campos a seguir para {actionTitle.toLowerCase()} o seu atleta na plataforma.
