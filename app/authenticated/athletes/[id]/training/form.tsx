@@ -126,8 +126,8 @@ export function PlanningForm({ onSuccess, defaultValues, method = 'POST' }: Prop
 
   return (
     <DrawerContent>
-      <div className='flex flex-col justify-center w-2/3 h-full mx-auto gap-1'>
-        <DrawerHeader className='text-center'>
+      <div className='flex flex-col justify-center w-full  md:w-4/5 xl:w-2/5 h-full mx-auto gap-1'>
+        <DrawerHeader>
           <DrawerTitle>{actionText} Treino</DrawerTitle>
           <DrawerDescription>
             Preencha os campos a seguir para {actionText.toLowerCase()} o treino do atleta na plataforma.
@@ -135,7 +135,7 @@ export function PlanningForm({ onSuccess, defaultValues, method = 'POST' }: Prop
         </DrawerHeader>
         <Form {...form}>
           <form id='athlete' onSubmit={form.handleSubmit(onSubmit)} className='text-left px-4 min-h-[340px] '>
-            <div className='grid grid-cols-2 gap-2'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-3'>
               <DatePicker
                 control={form.control}
                 name='date'

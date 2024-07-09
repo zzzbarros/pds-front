@@ -10,7 +10,7 @@ export function Create() {
 
   return (
     <Button
-      className='px-10'
+      className='px-10 w-full md:w-fit'
       onClick={() => {
         drawer.current?.open(<TrainingTypeForm closeDrawer={drawer.current?.close} />)
       }}

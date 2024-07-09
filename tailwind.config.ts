@@ -31,6 +31,10 @@ const config = {
             DEFAULT: 'hsl(var(--primary-night) / <alpha-value>)',
             foreground: 'hsl(var(--primary-night-foreground) / <alpha-value>)',
           },
+          dark: {
+            DEFAULT: 'hsl(var(--primary-dark) / <alpha-value>)',
+            foreground: 'hsl(var(--primary-dark-foreground) / <alpha-value>)',
+          },
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

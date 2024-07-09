@@ -9,7 +9,7 @@ export function Create() {
   const { drawer } = useDrawerContext()
   return (
     <Button
-      className='px-10'
+      className='w-full md:w-fit px-10'
       onClick={() => {
         drawer.current?.open(<AthleteForm closeDrawer={drawer.current.close} />)
       }}

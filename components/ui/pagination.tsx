@@ -106,6 +106,9 @@ const Pagination = ({ page: currentPage, lastPage, total, size, ...props }: Prop
   const nextPages =
     currentPage < lastPage ? generatePagesArray(currentPage, Math.min(currentPage + siblingsCount, lastPage)) : []
 
+  const disableNextButton = currentPage >= lastPage
+  const disablePreviousButton = currentPage <= 1
+
   const createQueryString = React.useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString())
@@ -125,7 +128,11 @@ const Pagination = ({ page: currentPage, lastPage, total, size, ...props }: Prop
     <Root {...props}>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={createPageUrl(previousPage)} isDisabled={currentPage === 1} />
+          <PaginationPrevious
+            href={createPageUrl(previousPage)}
+            isDisabled={disablePreviousButton}
+            tabIndex={disablePreviousButton ? -1 : 0}
+          />
         </PaginationItem>
         {currentPage > 1 + siblingsCount && (
           <>
@@ -167,7 +174,11 @@ const Pagination = ({ page: currentPage, lastPage, total, size, ...props }: Prop
           </>
         )}
         <PaginationItem>
-          <PaginationNext href={createPageUrl(nextPage)} isDisabled={currentPage === lastPage} />
+          <PaginationNext
+            href={createPageUrl(nextPage)}
+            isDisabled={disableNextButton}
+            tabIndex={disableNextButton ? -1 : 0}
+          />
         </PaginationItem>
       </PaginationContent>
     </Root>

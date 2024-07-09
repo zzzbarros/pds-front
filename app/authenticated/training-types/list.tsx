@@ -58,7 +58,7 @@ export default async function List({ page, search }: Props) {
               ))}
           </TableBody>
           {!trainingTypes?.length && (
-            <TableCaption className='py-2 pb-6 text-primary-medium font-medium'>
+            <TableCaption className='py-2 px-4 pb-6 text-primary-medium font-medium text-balance'>
               <PackageOpen size={64} strokeWidth={1} />
               {search ? 'Não encontramos nenhum Tipo de Treino com esse filtro...' : 'A lista está vazia...'}
               <br />
