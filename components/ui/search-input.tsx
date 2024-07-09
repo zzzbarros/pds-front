@@ -43,7 +43,7 @@ export function SearchInput({ value, placeholder }: { value: string; placeholder
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder={placeholder}
-        className='max-w-xs rounded-tr-none rounded-br-none focus-visible:ring-transparent'
+        className='md:max-w-sm rounded-tr-none rounded-br-none focus-visible:ring-transparent'
         onKeyDown={(e) => e.code === 'Enter' && handleSearch(search)}
       />
       <Button className='rounded-tl-none rounded-bl-none' onClick={() => handleSearch(search)}>

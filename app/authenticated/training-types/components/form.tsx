@@ -92,8 +92,8 @@ export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
 
   return (
     <DrawerContent>
-      <div className='flex flex-col justify-center w-1/3 h-full mx-auto gap-2'>
-        <DrawerHeader className='text-center'>
+      <div className='flex flex-col justify-center w-full sm:w-2/3 md:w-3/5 lg:w-2/5  h-full mx-auto gap-2'>
+        <DrawerHeader className='text-left'>
           <DrawerTitle>{actionLabel} Tipo de Treino</DrawerTitle>
           <DrawerDescription>
             Preencha os campos a seguir para {actionLabel.toLowerCase()} o tipo na plataforma.
@@ -103,7 +103,7 @@ export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
           <form
             id='training-type'
             onSubmit={form.handleSubmit(onSubmit)}
-            className='flex flex-col gap-6 text-left px-4 min-h-[100px]'
+            className='flex flex-col gap-6 text-left px-6 min-h-[100px]'
           >
             <div className='flex flex-col gap-3'>
               <FormField

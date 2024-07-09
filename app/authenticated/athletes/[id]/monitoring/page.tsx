@@ -185,24 +185,24 @@ export default function Monitoring() {
 
   return (
     <section className=' w-full h-full flex flex-col gap-6 print:gap-4'>
-      <div className='flex justify-between w-full'>
-        <div className='flex gap-4 items-center w-full'>
-          <Input type='week' className='max-w-44 print:hidden' onChange={handleWeekInput} value={week} />
-          <div className='flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
-            <button className='p-1 rounded-full bg-white hover:brightness-90 print:hidden' onClick={handlePreviousWeek}>
+      <div className='flex flex-col lg:flex-row gap-4 items-center mb-2 w-full justify-between'>
+        <div className='flex gap-4 items-center w-ful flex-col lg:flex-row w-full'>
+          <Input type='week' className='print:hidden w-full lg:max-w-44' onChange={handleWeekInput} value={week} />
+          <div className='w-full lg:w-fit flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
+            <button className='print:hidden p-1 rounded-full bg-white hover:brightness-90' onClick={handlePreviousWeek}>
               <ArrowLeft size={16} />
             </button>
-            <span>
-              {firstDayOfWeek.toLocaleDateString()} - {lastDayOfWeek.toLocaleDateString()}
+            <span className='w-full text-center'>
+              {firstDayOfWeek.toLocaleDateString('pt-BR')} - {lastDayOfWeek.toLocaleDateString('pt-BR')}
             </span>
-            <button className='p-1 rounded-full bg-white hover:brightness-90 print:hidden' onClick={handleNextWeek}>
+            <button className='print:hidden p-1 rounded-full bg-white hover:brightness-90' onClick={handleNextWeek}>
               <ArrowRight size={16} />
             </button>
           </div>
           {isLoading && <Spinner />}
         </div>
         <Button
-          className='px-10 print:hidden'
+          className='px-10 w-full lg:w-fit print:hidden'
           onClick={() => {
             if (window) window.print()
           }}

@@ -29,6 +29,7 @@ import {
 } from '@/lib/utils'
 import { PlanningForm } from './form'
 import { TrainingCard } from './components'
+import { useDrawerContext } from '@/contexts'
 
 export interface BaseTrainingProps {
   id: string
@@ -65,6 +66,7 @@ export default function PlanningPage() {
   const currentDay = new Date()
   const week = searchParams.get('week') ?? getWeekNumberFromDate(currentDay)
   const weekDates = week ? getWeekDatesFromInput(week) : getCurrentWeekDates()
+  const { drawer } = useDrawerContext()
 
   const firstDayOfWeek = weekDates[0]
   const lastDayOfWeek = weekDates[6]
@@ -103,6 +105,7 @@ export default function PlanningPage() {
   }
 
   function onSuccessPlanningTraining(date: Date) {
+    drawer.current?.close()
     const createdInWeek = getWeekNumberFromDate(date)
     if (createdInWeek === week) return mutate()
     router.replace(pathname.concat(`?week=${createdInWeek}`))
@@ -110,30 +113,37 @@ export default function PlanningPage() {
 
   return (
     <section className='w-full h-full'>
-      <div className='flex items-center mb-2 w-ful justify-between'>
-        <div className='flex gap-4 items-center w-ful'>
-          <Input type='week' className='max-w-44' onChange={handleWeekInput} value={week} />
-          <div className='flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
+      <div className='flex flex-col lg:flex-row gap-4 items-center mb-2 w-full justify-between'>
+        <div className='flex gap-4 items-center w-ful flex-col lg:flex-row w-full'>
+          <Input type='week' className='w-full lg:max-w-44' onChange={handleWeekInput} value={week} />
+          <div className='w-full lg:w-fit flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
             <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handlePreviousWeek}>
               <ArrowLeft size={16} />
             </button>
-            <span>
+            <span className='w-full text-center'>
               {firstDayOfWeek.toLocaleDateString('pt-BR')} - {lastDayOfWeek.toLocaleDateString('pt-BR')}
             </span>
             <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handleNextWeek}>
               <ArrowRight size={16} />
             </button>
           </div>
+
           {isLoading && <Spinner />}
         </div>
-        <PlanningForm onSuccess={onSuccessPlanningTraining}>
-          <Button className='px-10'>
-            <Plus />
-            Planejar Treino
-          </Button>
-        </PlanningForm>
+        <Button
+          className='px-10 w-full lg:w-fit'
+          onClick={() => {
+            drawer.current?.open(<PlanningForm onSuccess={onSuccessPlanningTraining} />)
+          }}
+        >
+          <Plus />
+          Planejar Treino
+        </Button>
       </div>
-      <section tabIndex={0} className='grid grid-cols-7 min-h-[38vh] rounded-md border border-gray-200'>
+      <section
+        tabIndex={0}
+        className='grid grid-rows-7 lg:grid-rows-1 lg:grid-cols-7 min-h-[38vh] rounded-md border border-gray-200'
+      >
         {weekDates.map((date) => {
           const isCurrentDay = compareDates(date, currentDay)
           const day = date.toLocaleDateString('pt-BR').split('/')[0]
@@ -143,7 +153,7 @@ export default function PlanningPage() {
             <li
               key={day}
               className={cn(
-                'py-4 border-r border-gray-200 flex flex-col items-center rounded-t-sm',
+                'py-4 border-t lg:border-r border-gray-200 flex flex-col items-center rounded-t-sm',
                 isCurrentDay && 'bg-gray-100'
               )}
             >

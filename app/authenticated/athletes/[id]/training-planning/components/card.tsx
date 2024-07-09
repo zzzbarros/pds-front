@@ -1,7 +1,7 @@
 'use client'
 
 import { Edit, Trash } from 'lucide-react'
-import { useDialogContext } from '@/contexts'
+import { useDialogContext, useDrawerContext } from '@/contexts'
 import { ConfirmDeleteDialog } from '@/components/compositions'
 import { BaseTrainingCard, Button } from '@/components/ui'
 import { PlanningForm } from '../form'
@@ -14,26 +14,32 @@ export function TrainingCard({
 }: BaseTrainingProps & { onSuccessUpdate(date: Date): void; onSuccessDelete(): void }) {
   const { id, date, trainingType, description, duration, pse } = rest
   const { dialog } = useDialogContext()
+  const { drawer } = useDrawerContext()
 
   return (
     <BaseTrainingCard {...rest}>
       <div className='flex gap-1 justify-end'>
-        <PlanningForm
-          onSuccess={onSuccessUpdate}
-          defaultValues={{
-            date,
-            duration,
-            pse,
-            description: description ?? '',
-            trainingTypeUuid: trainingType.id,
-            trainingId: id,
+        <Button
+          className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
+          onClick={() => {
+            drawer.current?.open(
+              <PlanningForm
+                onSuccess={onSuccessUpdate}
+                defaultValues={{
+                  date,
+                  duration,
+                  pse,
+                  description: description ?? '',
+                  trainingTypeUuid: trainingType.id,
+                  trainingId: id,
+                }}
+              />
+            )
           }}
         >
-          <Button className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'>
-            <Edit size={20} />
-            <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
-          </Button>
-        </PlanningForm>
+          <Edit size={20} />
+          <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
+        </Button>
         <Button
           className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
           onClick={() => {

@@ -138,21 +138,21 @@ export default function PlanningPage() {
 
   return (
     <section className='w-full h-full'>
-      <div className='flex items-center mb-2 w-ful justify-between'>
-        <div className='flex gap-4 items-center w-ful'>
-          <Input type='week' className='max-w-44' onChange={handleWeekInput} value={week} />
-          <div className='flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
+      <div className='flex flex-col lg:flex-row gap-4 items-center mb-2 w-full justify-between'>
+        <div className='flex gap-4 items-center w-ful flex-col lg:flex-row w-full'>
+          <Input type='week' className='w-full lg:max-w-44' onChange={handleWeekInput} value={week} />
+          <div className='w-full lg:w-fit flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
             <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handlePreviousWeek}>
               <ArrowLeft size={16} />
             </button>
-            <span>
+            <span className='w-full text-center'>
               {firstDayOfWeek.toLocaleDateString('pt-BR')} - {lastDayOfWeek.toLocaleDateString('pt-BR')}
             </span>
             <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handleNextWeek}>
               <ArrowRight size={16} />
             </button>
           </div>
-          <div className='flex items-center space-x-2'>
+          <div className='flex items-center w-full lg:w-fit space-x-2'>
             <Switch
               onCheckedChange={handlePlannedSwitch}
               checked={showPlannedTrainings}
@@ -163,7 +163,7 @@ export default function PlanningPage() {
           {(isLoadingTraining || isLoadingPlanning) && <Spinner />}
         </div>
         <Button
-          className='px-10'
+          className='px-10 w-full lg:w-fit'
           onClick={() => {
             drawer.current?.open(
               <PlanningForm
@@ -181,7 +181,7 @@ export default function PlanningPage() {
           Cadastrar Treino
         </Button>
       </div>
-      <ul className='grid grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
+      <ul className='grid grid-rows-7 lg:grid-rows-1 lg:grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
         {weekDates?.map((date) => {
           const isCurrentDay = compareDates(date, currentDay)
           const day = date.toLocaleDateString('pt-BR').split('/')[0]
@@ -192,7 +192,7 @@ export default function PlanningPage() {
             <li
               key={day}
               className={cn(
-                'py-4 border-r border-gray-200 flex flex-col items-center rounded-t-sm group',
+                'py-4 border-t md:border-r border-gray-200 flex flex-col items-center rounded-t-sm group',
                 isCurrentDay && 'bg-gray-100'
               )}
             >

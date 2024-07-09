@@ -20,7 +20,7 @@ export default async function AthleteList({ searchParams }: Props) {
   const { page = '1', search = '' } = searchParams
 
   return (
-    <section className='w-full h-full p-4 px-10'>
+    <section className='w-full h-full p-4 px-6 md:px-10'>
       <div className='flex flex-col gap-0.5'>
         <h1 className='text-xl font-semibold'>Lista de Atletas</h1>
         <Breadcrumb>
@@ -35,7 +35,7 @@ export default async function AthleteList({ searchParams }: Props) {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className='pt-6 flex justify-between'>
+      <div className='pt-6 flex justify-between flex-wrap sm:flex-nowrap gap-4'>
         <SearchInput placeholder='Procure pelo nome do atleta ou e-mail...' value={search as string} />
         <Create />
       </div>
