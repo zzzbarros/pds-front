@@ -10,10 +10,6 @@ import {
   TableCell,
   TableTd,
   StatusBadge,
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
 } from '@/components/ui'
 import { serverFetcher } from '@/services'
 import { AthleteListOptions } from './components'
