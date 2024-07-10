@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className='relative w-full overflow-auto'>
+    <div className='relative w-full overflow-hidden'>
       <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   )
@@ -51,7 +51,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<
     <th
       ref={ref}
       className={cn(
-        'h-12 px-4 text-left align-middle font-bold text-muted-foreground [&:has([role=checkbox])]:pr-0',
+        'h-12 px-2 md:px-4 text-left align-middle font-bold text-muted-foreground [&:has([role=checkbox])]:pr-0 whitespace-pre-line',
         className
       )}
       {...props}
@@ -72,7 +72,11 @@ const TableCell = React.forwardRef<
   React.TdHTMLAttributes<HTMLTableCellElement> & { href: string }
 >(({ href, className, children, ...props }, ref) => (
   <TableTd ref={ref} className={cn('p-0 px-1', className)} {...props}>
-    <Link prefetch={true} href={href} className='p-4 flex w-full'>
+    <Link
+      prefetch={true}
+      href={href}
+      className='px-1 md:p-4 truncate w-full text-ellipsis whitespace-break-spaces md:w-fit line-clamp-1 break-all'
+    >
       {children}
     </Link>
   </TableTd>

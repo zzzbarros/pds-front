@@ -92,7 +92,7 @@ export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
 
   return (
     <DrawerContent>
-      <div className='flex flex-col justify-center w-full sm:w-2/3 md:w-3/5 lg:w-2/5  h-full mx-auto gap-2'>
+      <div className='flex flex-col justify-center w-full sm:w-2/3 md:w-3/5 lg:w-2/5 h-full mx-auto gap-2'>
         <DrawerHeader className='text-left'>
           <DrawerTitle>{actionLabel} Tipo de Treino</DrawerTitle>
           <DrawerDescription>
