@@ -52,8 +52,12 @@ export default async function List({ page, search }: Props) {
             {!!athletes?.length &&
               athletes.map(({ id, name, email, isEnabled }) => (
                 <TableRow key={id}>
-                  <TableCell href={athleteDetailsRoute(id)}>{name}</TableCell>
-                  <TableCell href={athleteDetailsRoute(id)}>{email}</TableCell>
+                  <TableCell href={athleteDetailsRoute(id)} title={email}>
+                    {name}
+                  </TableCell>
+                  <TableCell href={athleteDetailsRoute(id)} title={email}>
+                    {email}
+                  </TableCell>
                   <TableCell href={athleteDetailsRoute(id)}>
                     <StatusBadge {...{ isEnabled }} />
                   </TableCell>

@@ -117,7 +117,7 @@ export function AthleteForm({ closeDrawer, defaultValues }: Props) {
           <form
             id='athlete'
             onSubmit={form.handleSubmit(onSubmit)}
-            className='flex flex-col gap-6 text-left px-4 min-h-[480px]'
+            className='flex flex-col gap-6 text-left px-4 min-h-fit'
           >
             <div className='flex flex-col gap-2.5'>
               <FormField

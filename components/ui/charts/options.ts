@@ -1,4 +1,3 @@
-type Position = 'center' | 'left' | 'right' | 'bottom' | 'top' | 'chartArea'
 type Align = 'end' | 'start' | 'center' | 'bottom' | 'left' | 'right'
 type Anchor = 'center' | 'start' | 'end'
 
@@ -22,14 +21,23 @@ export const options = {
   },
   plugins: {
     datalabels: {
-      display: true,
-      color: 'black',
+      display: (chart: any) => chart.dataset.data[chart.dataIndex],
+      color: 'white',
       borderRadius: 4,
-      backgroundColor: 'rgba(255,255,255,0.2)',
+      backgroundColor: (chart: any) => {
+        return chart.dataset.backgroundColor
+      },
       formatter: Math.round,
       anchor: 'center' as Anchor,
-      offset: -22,
+      offset: -12,
       align: 'start' as Align,
+      textAlign: 'center' as const,
+      padding: {
+        top: 4,
+        bottom: 4,
+        left: 8,
+        right: 8,
+      },
     },
   },
 }
