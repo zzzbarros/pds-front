@@ -153,13 +153,25 @@ export default function PlanningPage() {
             <li
               key={day}
               className={cn(
-                'py-4 border-t lg:border-r border-gray-200 flex flex-col items-center rounded-t-sm',
+                'py-4 border-t lg:border-r border-gray-200 flex flex-col items-center rounded-t-sm group',
                 isCurrentDay && 'bg-gray-100'
               )}
             >
-              <p className='text-xl text-slate-950 font-semibold'>{day}</p>
+              <div className='flex gap-2 items-center w-full justify-center relative'>
+                <p className='text-xl text-slate-950 font-semibold relative'>{day}</p>
+                <button
+                  data-current-day={isCurrentDay}
+                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/4 animate-in'
+                  onClick={() => {
+                    drawer.current?.open(
+                      <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
+                    )
+                  }}
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
               <p className='font-medium'>{textDay}</p>
-
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
                 {plannedTrainings.map((plannedTraining) => (
                   <li key={plannedTraining.id}>

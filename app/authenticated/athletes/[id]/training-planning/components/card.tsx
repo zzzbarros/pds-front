@@ -24,6 +24,7 @@ export function TrainingCard({
           onClick={() => {
             drawer.current?.open(
               <PlanningForm
+                method='PUT'
                 onSuccess={onSuccessUpdate}
                 defaultValues={{
                   date,
