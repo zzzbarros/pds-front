@@ -131,7 +131,7 @@ export function PlanningForm({ onSuccess, defaultValues }: Props) {
 
   return (
     <DrawerContent>
-      <div className='flex flex-col justify-center w-full sm:w-2/3 md:w-2/5 max-w-xl h-full mx-auto gap-1 overflow-auto'>
+      <div className='flex flex-col justify-center w-full sm:w-2/3 md:w-2/5 max-w-xl h-full mx-auto gap-1'>
         <DrawerHeader>
           <DrawerTitle>{title} Planejamento de Treino</DrawerTitle>
           <DrawerDescription>
@@ -142,7 +142,7 @@ export function PlanningForm({ onSuccess, defaultValues }: Props) {
           <form
             id='athlete'
             onSubmit={form.handleSubmit(onSubmit)}
-            className='flex flex-col gap-6 text-left px-4 overflow-auto h-full'
+            className='flex flex-col gap-6 text-left px-4 h-full'
           >
             <div className='flex flex-col gap-3 h-full'>
               <DatePicker control={form.control} name='date' label='Data do Treino' />
