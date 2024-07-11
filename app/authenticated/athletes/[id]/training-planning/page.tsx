@@ -196,7 +196,7 @@ export default function PlanningPage() {
             <TableRow>
               <TableHead>Semana</TableHead>
               <TableHead>
-                <span className='hidden md:visible'>Carga Planejada</span>
+                <span className='hidden md:inline'>Carga Planejada</span>
                 <span className='visible md:hidden flex gap-1 items-center'>
                   C.P.
                   <Popover>

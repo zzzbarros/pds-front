@@ -316,7 +316,7 @@ export default function PlanningPage() {
             <TableRow>
               <TableHead>Semana</TableHead>
               <TableHead data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
-                <span className='hidden md:visible'>Carga Planejada</span>
+                <span className='hidden md:inline'>Carga Planejada</span>
                 <span className='visible md:hidden flex gap-1 items-center'>
                   C.P.
                   <Popover>
@@ -330,7 +330,7 @@ export default function PlanningPage() {
                 </span>
               </TableHead>
               <TableHead>
-                <span className='hidden md:visible'>Carga Realizada</span>
+                <span className='hidden md:inline'>Carga Realizada</span>
                 <span className='visible md:hidden flex gap-1 items-center'>
                   C.R.
                   <Popover>
@@ -344,7 +344,7 @@ export default function PlanningPage() {
                 </span>
               </TableHead>
               <TableHead data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
-                <span className='hidden md:visible'>Treinos Planejados</span>
+                <span className='hidden md:inline'>Treinos Planejados</span>
                 <span className='visible md:hidden flex gap-1 items-center'>
                   T.P.
                   <Popover>
@@ -356,7 +356,7 @@ export default function PlanningPage() {
                 </span>
               </TableHead>
               <TableHead>
-                <span className='hidden md:visible'>Treinos Realizados</span>
+                <span className='hidden md:inline'>Treinos Realizados</span>
                 <span className='visible md:hidden flex gap-1 items-center'>
                   T.R.
                   <Popover>
