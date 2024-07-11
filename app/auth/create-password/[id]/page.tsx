@@ -96,8 +96,8 @@ export default function CreatePassword() {
 
   return (
     <section className='w-full text-center'>
-      <h1 className='text-2xl text-primary-medium font-bold'>Conclua a sua conta</h1>
-      <p className='mt-[6px] mb-6 text-zinc-600 font-medium'>
+      <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>Conclua a sua conta</h1>
+      <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium'>
         Crie a sua senha para concluir o cadastro na plataforma.
       </p>
       <Form {...form}>
@@ -105,7 +105,7 @@ export default function CreatePassword() {
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex flex-col max-w-xs md:max-w-sm mx-auto gap-6 text-left'
         >
-          <div className='flex flex-col gap-3'>
+          <div className='flex flex-col gap-4 md:gap-3'>
             {fields.map(({ label, name, info }, index) => (
               <FormField
                 key={name}
@@ -116,7 +116,7 @@ export default function CreatePassword() {
                     <FormLabel>
                       {info ? (
                         <Popover>
-                          <PopoverTrigger className='flex items-center gap-1.5'>
+                          <PopoverTrigger className='flex items-center gap-1.5 pb-0.5'>
                             {label}
                             <Info size={16} />
                           </PopoverTrigger>
@@ -139,7 +139,7 @@ export default function CreatePassword() {
                     <FormControl>
                       <Input
                         {...field}
-                        {...(!index ? { autoFocus: true } : { autoComplete: 'current-password' })}
+                        {...(!index ? { autoFocus: true, tabIndex: 0 } : { autoComplete: 'current-password' })}
                         type='password'
                         placeholder='********'
                       />

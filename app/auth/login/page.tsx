@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next-nprogress-bar'
 import { setCookie } from 'cookies-next'
 import { useForm } from 'react-hook-form'
@@ -41,7 +42,7 @@ const schema = z
     keepLogin: z.boolean().default(false),
     serverError: z.string().default('').optional(),
   })
-  .transform(({ email, password }) => ({ email, password }))
+  .transform(({ email, password, keepLogin }) => ({ email, password, keepLogin }))
 
 export default function LoginPage() {
   const router = useRouter()
@@ -62,11 +63,10 @@ export default function LoginPage() {
     },
   ]
 
-  async function onSubmit(data: FormProps) {
-    const res = await services.auth.login(data as OutputFormProps)
-
+  async function onSubmit({ email, password, keepLogin }: FormProps) {
+    const res = await services.auth.login({ email, password } as OutputFormProps)
     if (res.ok) {
-      setCookie('user', JSON.stringify(res.data))
+      setCookie('user', JSON.stringify({ ...res.data, keepLogin }))
       router.push('/authenticated')
       router.refresh()
     } else {
@@ -82,9 +82,9 @@ export default function LoginPage() {
   }
 
   return (
-    <section className='w-full text-center' tabIndex={-1}>
-      <h1 className='text-2xl text-primary-medium font-bold'>Acesse sua conta</h1>
-      <p className='mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
+    <section className='w-full text-center'>
+      <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>Acesse sua conta</h1>
+      <p className='text-xl md:text-lg mt-[6px] mb-8 md:mb-6 text-zinc-600 font-medium text-balance'>
         Insira seu e-mail para acessar o painel do usuário.
       </p>
       <Form {...form}>
@@ -92,7 +92,7 @@ export default function LoginPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex flex-col max-w-xs md:max-w-sm mx-auto gap-6 text-left'
         >
-          <div className='flex flex-col gap-3'>
+          <div className='flex flex-col gap-4 md:gap-4 md:gap-3'>
             {fields.map(({ label, name, placeholder, type, autoComplete }, index) => (
               <FormField
                 key={name}
@@ -104,7 +104,7 @@ export default function LoginPage() {
                     <FormControl>
                       <Input
                         {...field}
-                        {...(!index && { autoFocus: true })}
+                        {...(!index && { autoFocus: true, tabIndex: 0 })}
                         {...{ type, autoComplete }}
                         placeholder={placeholder}
                       />
@@ -126,8 +126,13 @@ export default function LoginPage() {
             </fieldset>
           </div>
           <Button isLoading={form.formState.isSubmitting} type='submit'>
-            Continuar
+            Entrar
           </Button>
+          <Link href='/auth/forgot-password'>
+            <Button variant='link' className='w-full text-center text-primary-medium' type='button'>
+              Esqueceu sua senha?
+            </Button>
+          </Link>
         </form>
       </Form>
     </section>

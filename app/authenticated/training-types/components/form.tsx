@@ -105,7 +105,7 @@ export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
             onSubmit={form.handleSubmit(onSubmit)}
             className='flex flex-col gap-6 text-left px-6 min-h-[100px]'
           >
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-4 md:gap-3'>
               <FormField
                 control={form.control}
                 name='name'

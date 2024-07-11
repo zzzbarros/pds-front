@@ -23,7 +23,7 @@ export function TabsComponents({ children }: Props) {
         defaultValue={defaultTabByRoute[route] ?? defaultTabByRoute.register}
         className='w-full flex flex-col gap-20 focus-visible:border-0'
       >
-        <TabsList className='mx-auto'>
+        <TabsList className='mx-auto flex-nowrap'>
           <TabsTrigger value={AuthTabEnum.REGISTER}>Criar Conta</TabsTrigger>
           <TabsTrigger value={AuthTabEnum.LOGIN}>Entrar</TabsTrigger>
         </TabsList>
