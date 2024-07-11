@@ -96,10 +96,8 @@ export default function CreatePassword() {
 
   return (
     <section className='w-full text-center'>
-      <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>Conclua a sua conta</h1>
-      <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium'>
-        Crie a sua senha para concluir o cadastro na plataforma.
-      </p>
+      <h1 className='text-2xl text-primary-medium font-bold'>Cadastre a nova senha</h1>
+      <p className='mt-[6px] mb-6 text-zinc-600 font-medium'>Crie sua nova senha para acessar a plataforma.</p>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

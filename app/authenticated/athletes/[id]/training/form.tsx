@@ -178,7 +178,9 @@ export function PlanningForm({ onSuccess, defaultValues, method = 'POST' }: Prop
                               {label}
                             </SelectItem>
                           ))}
-                          {!trainingTypes.length && <span className='px-2 text-sm'>Nenhuma opção encontrada...</span>}
+                          {!trainingTypes.length && (
+                            <span className='px-2  text-lg md:text-sm '>Nenhuma opção encontrada...</span>
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>

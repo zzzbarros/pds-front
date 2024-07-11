@@ -67,21 +67,21 @@ export default function RegisterPage() {
 
   if (form.formState.isSubmitSuccessful)
     return (
-      <div className='w-full text-center'>
-        <h1 className='text-2xl text-primary-medium font-bold'>Verifique seu E-mail</h1>
-        <p className='mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
+      <div className='w-full text-center text-lg md:text-base'>
+        <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>Verifique seu E-mail</h1>
+        <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
           Enviamos para seu e-mail a confirmação dos próximos passos...
         </p>
-        <p className='mt-[6px] mb-6 text-zinc-600 font-medium'>
-          E-mail: <span className='font-bold text-lg'>{form.watch('email')}</span>.
+        <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium flex-wrap'>
+          E-mail: <span className='font-bold text-xl md:text-lg whitespace-nowrap'>{form.watch('email')}</span>.
         </p>
       </div>
     )
 
   return (
-    <section className='w-full text-center' tabIndex={-1}>
-      <h1 className='text-2xl text-primary-medium font-bold'>Crie sua conta</h1>
-      <p className='mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
+    <section className='w-full text-center text-lg md:text-base'>
+      <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>Crie sua conta</h1>
+      <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium text-balance'>
         Insira seu e-mail para continuar com a criação do usuário.
       </p>
       <Form {...form}>
@@ -89,7 +89,7 @@ export default function RegisterPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex flex-col max-w-xs md:max-w-sm mx-auto gap-6 text-left'
         >
-          <div className='flex flex-col gap-3'>
+          <div className='flex flex-col gap-4 md:gap-3'>
             {fields.map(({ label, name, placeholder }, index) => (
               <FormField
                 key={name}
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                   <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                      <Input {...(!index && { autoFocus: true })} placeholder={placeholder} {...field} />
+                      <Input {...(!index && { autoFocus: true, tabIndex: 0 })} placeholder={placeholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -108,7 +108,7 @@ export default function RegisterPage() {
             ))}
           </div>
           <Button type='submit' disabled={form.formState.isSubmitting} isLoading={form.formState.isSubmitting}>
-            Continuar
+            Cadastrar
           </Button>
         </form>
       </Form>

@@ -36,7 +36,8 @@ import {
 
 interface Props {
   onSuccess?(date: Date): void
-  defaultValues?: OutputFormProps & { trainingId: string }
+  defaultValues?: Partial<OutputFormProps & { trainingId?: string }>
+  method?: 'POST' | 'PUT'
 }
 
 type FormProps = z.input<typeof schema>
@@ -78,11 +79,12 @@ const schema = z
     pse,
   }))
 
-export function PlanningForm({ onSuccess, defaultValues }: Props) {
+export function PlanningForm({ onSuccess, defaultValues, method = 'POST' }: Props) {
   const params = useParams()
   const { toast } = useToast()
 
-  const title = !!defaultValues ? 'Editar' : 'Cadastrar'
+  const isEdit = method === 'PUT' && !!defaultValues
+  const title = isEdit ? 'Editar' : 'Cadastrar'
 
   const { data: trainingTypes = [], isLoading: isLoadingTrainingTypes } = useSWR('training-types/all', async () => {
     const response = await clientFetcher('training-types/all')
@@ -97,10 +99,10 @@ export function PlanningForm({ onSuccess, defaultValues }: Props) {
 
   async function onSubmit(data: FormProps) {
     const res = await clientFetcher('training-planning', {
-      method: defaultValues ? 'PUT' : 'POST',
+      method,
       body: JSON.stringify({
         ...data,
-        ...(defaultValues ? { trainingUuid: defaultValues.trainingId } : { athleteUuid: params.id }),
+        ...(isEdit ? { trainingUuid: defaultValues.trainingId } : { athleteUuid: params.id }),
       }),
     })
     if (!res.ok) {
@@ -144,7 +146,7 @@ export function PlanningForm({ onSuccess, defaultValues }: Props) {
             onSubmit={form.handleSubmit(onSubmit)}
             className='flex flex-col gap-6 text-left px-4 h-full'
           >
-            <div className='flex flex-col gap-3 h-full'>
+            <div className='flex flex-col gap-4 md:gap-3 h-full'>
               <DatePicker control={form.control} name='date' label='Data do Treino' />
               <FormField
                 control={form.control}

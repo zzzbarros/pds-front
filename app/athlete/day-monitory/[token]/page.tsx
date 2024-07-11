@@ -103,7 +103,7 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
         <section className='w-full flex justify-center items-center p-3'>
           <div
             onSubmit={handleSubmit(submit)}
-            className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-3 md:gap-4 h-fit text-center text-balance'
+            className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-4 md:gap-3 h-fit text-center text-balance'
           >
             <span className='hidden xl:inline'>
               <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
@@ -127,7 +127,7 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
       <section className='w-full flex justify-center p-3'>
         <form
           onSubmit={handleSubmit(submit)}
-          className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-3 md:gap-4'
+          className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-4 md:gap-4'
         >
           <span className='hidden xl:inline'>
             <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
@@ -153,7 +153,7 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
                         <button
                           type='button'
                           data-active={watch(question.value as keyof FormProps) === value}
-                          className='w-full flex md:justify-center gap-1 items-center border border-primary-night rounded-md py-1.5 px-4 md:px-2.5 font-medium text-primary-night text-sm data-[active=true]:bg-primary data-[active=true]:text-white data-[active=true]:border-primary hover:bg-primary-medium data-[active=true]:hover:bg-primary-medium hover:border-primary-medium hover:text-white'
+                          className='w-full flex md:justify-center gap-1 items-center border border-primary-night rounded-md py-3 md:py-1.5 px-4 md:px-2.5 font-medium text-primary-night text-lg md:text-sm data-[active=true]:bg-primary data-[active=true]:text-white data-[active=true]:border-primary hover:bg-primary-medium data-[active=true]:hover:bg-primary-medium hover:border-primary-medium hover:text-white'
                           onClick={() => setAnswer(question.value, value)}
                         >
                           {icon}

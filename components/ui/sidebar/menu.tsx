@@ -19,7 +19,7 @@ export function MenuButton({ href, label, icon }: Props) {
     <Link href={href[0]} className='rounded-md' prefetch={true}>
       <li
         className={twMerge(
-          'text-gray-600 hover:text-white hover:bg-primary-night text-nowrap flex items-center gap-2 py-2 px-4 rounded-md w-full',
+          'text-gray-600 hover:text-white hover:bg-primary-night text-nowrap flex items-center gap-2 py-2 px-4 rounded-md w-full text-lg md-text-base',
           isActive && 'text-white bg-primary-medium font-semibold'
         )}
       >

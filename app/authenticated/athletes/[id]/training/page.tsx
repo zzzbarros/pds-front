@@ -2,7 +2,7 @@
 
 import type { ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Plus, Trash } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Info, Plus, Trash } from 'lucide-react'
 import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
@@ -10,11 +10,15 @@ import {
   Button,
   Input,
   Label,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Skeleton,
   Spinner,
   Switch,
   Table,
   TableBody,
+  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
@@ -137,11 +141,11 @@ export default function PlanningPage() {
   }
 
   return (
-    <section className='w-full h-full'>
+    <section className='w-full h-full '>
       <div className='flex flex-col lg:flex-row gap-4 items-center mb-2 w-full justify-between'>
         <div className='flex gap-4 items-center w-ful flex-col lg:flex-row w-full'>
           <Input type='week' className='w-full lg:max-w-44' onChange={handleWeekInput} value={week} />
-          <div className='w-full lg:w-fit flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-sm'>
+          <div className='w-full lg:w-fit flex items-center gap-4 bg-gray-100 py-1 px-2 rounded-full h-fit text-base md:text-sm'>
             <button className='p-1 rounded-full bg-white hover:brightness-90' onClick={handlePreviousWeek}>
               <ArrowLeft size={16} />
             </button>
@@ -197,7 +201,7 @@ export default function PlanningPage() {
               )}
             >
               <div className='flex gap-2 items-center w-full justify-center relative'>
-                <p className='text-xl text-slate-950 font-semibold relative'>{day}</p>
+                <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
                 <button
                   data-current-day={isCurrentDay}
                   className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/4 animate-in'
@@ -210,8 +214,7 @@ export default function PlanningPage() {
                   <Plus size={14} />
                 </button>
               </div>
-              <p className='font-medium'>{textDay}</p>
-
+              <p className='text-lg md:text-base font-medium'>{textDay}</p>
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
                 {plannedTrainings?.map((plannedTraining) => (
                   <li key={plannedTraining.id}>
@@ -313,13 +316,57 @@ export default function PlanningPage() {
             <TableRow>
               <TableHead>Semana</TableHead>
               <TableHead data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
-                {'Carga planejada (Unidades arbitrárias)'}
+                <span className='hidden md:inline'>Carga Planejada</span>
+                <span className='visible md:hidden flex gap-1 items-center'>
+                  C.P.
+                  <Popover>
+                    <PopoverTrigger className='flex items-center gap-1.5 pb-0.5'>
+                      <Info size={16} />
+                    </PopoverTrigger>
+                    <PopoverContent className='w-fit'>
+                      Carga Planejada <br /> <span className='text-zinc-600'>Unidade Arbitrárias (U.A.)</span>
+                    </PopoverContent>
+                  </Popover>
+                </span>
               </TableHead>
-              <TableHead>Carga realizada (Unidades arbitrárias)</TableHead>
+              <TableHead>
+                <span className='hidden md:inline'>Carga Realizada</span>
+                <span className='visible md:hidden flex gap-1 items-center'>
+                  C.R.
+                  <Popover>
+                    <PopoverTrigger className='flex items-center gap-1.5 pb-0.5'>
+                      <Info size={16} />
+                    </PopoverTrigger>
+                    <PopoverContent className='w-fit'>
+                      Carga Realizada <br /> <span className='text-zinc-600'>Unidade Arbitrárias (U.A.)</span>
+                    </PopoverContent>
+                  </Popover>
+                </span>
+              </TableHead>
               <TableHead data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
-                Treinos planejados
+                <span className='hidden md:inline'>Treinos Planejados</span>
+                <span className='visible md:hidden flex gap-1 items-center'>
+                  T.P.
+                  <Popover>
+                    <PopoverTrigger className='flex items-center gap-1.5 pb-0.5'>
+                      <Info size={16} />
+                    </PopoverTrigger>
+                    <PopoverContent className='w-fit'>Treinos Planejados</PopoverContent>
+                  </Popover>
+                </span>
               </TableHead>
-              <TableHead>Treinos realizados</TableHead>
+              <TableHead>
+                <span className='hidden md:inline'>Treinos Realizados</span>
+                <span className='visible md:hidden flex gap-1 items-center'>
+                  T.R.
+                  <Popover>
+                    <PopoverTrigger className='flex items-center gap-1.5 pb-0.5'>
+                      <Info size={16} />
+                    </PopoverTrigger>
+                    <PopoverContent className='w-fit'>Treinos Realizados</PopoverContent>
+                  </Popover>
+                </span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -329,28 +376,28 @@ export default function PlanningPage() {
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  plannedData?.charge?.previousWeek ?? 0
+                  plannedData?.charge?.previousWeek ?? '-'
                 )}
               </TableTd>
               <TableTd>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  trainingData?.charge?.previousWeek ?? 0
+                  trainingData?.charge?.previousWeek ?? '-'
                 )}
               </TableTd>
               <TableTd data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  plannedData?.trainingTotals?.previousWeek ?? 0
+                  plannedData?.trainingTotals?.previousWeek ?? '-'
                 )}
               </TableTd>
               <TableTd>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  trainingData?.trainingTotals?.previousWeek ?? 0
+                  trainingData?.trainingTotals?.previousWeek ?? '-'
                 )}
               </TableTd>
             </TableRow>
@@ -358,24 +405,28 @@ export default function PlanningPage() {
               <TableTd>Semana atual</TableTd>
               {showPlannedTrainings && (
                 <TableTd>
-                  {isLoadingTraining ? <Skeleton className='w-10 h-4 rounded-none' /> : plannedData?.charge?.week ?? 0}
+                  {isLoadingTraining ? (
+                    <Skeleton className='w-10 h-4 rounded-none' />
+                  ) : (
+                    plannedData?.charge?.week ?? '-'
+                  )}
                 </TableTd>
               )}
               <TableTd>
-                {isLoadingTraining ? <Skeleton className='w-10 h-4 rounded-none' /> : trainingData?.charge?.week ?? 0}
+                {isLoadingTraining ? <Skeleton className='w-10 h-4 rounded-none' /> : trainingData?.charge?.week ?? '-'}
               </TableTd>
               <TableTd data-visible={showPlannedTrainings} className='hidden data-[visible=true]:table-cell'>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  plannedData?.trainingTotals?.week ?? 0
+                  plannedData?.trainingTotals?.week ?? '-'
                 )}
               </TableTd>
               <TableTd>
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  trainingData?.trainingTotals?.week ?? 0
+                  trainingData?.trainingTotals?.week ?? '-'
                 )}
               </TableTd>
             </TableRow>
@@ -386,7 +437,7 @@ export default function PlanningPage() {
                   {isLoadingTraining ? (
                     <Skeleton className='w-10 h-4 rounded-none' />
                   ) : (
-                    plannedData?.charge?.nextWeek ?? 0
+                    plannedData?.charge?.nextWeek ?? '-'
                   )}
                 </TableTd>
               )}
@@ -394,7 +445,7 @@ export default function PlanningPage() {
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  trainingData?.charge?.nextWeek ?? 0
+                  trainingData?.charge?.nextWeek ?? '-'
                 )}
               </TableTd>
               {showPlannedTrainings && (
@@ -402,7 +453,7 @@ export default function PlanningPage() {
                   {isLoadingTraining ? (
                     <Skeleton className='w-10 h-4 rounded-none' />
                   ) : (
-                    plannedData?.trainingTotals?.nextWeek ?? 0
+                    plannedData?.trainingTotals?.nextWeek ?? '-'
                   )}
                 </TableTd>
               )}
@@ -410,7 +461,7 @@ export default function PlanningPage() {
                 {isLoadingTraining ? (
                   <Skeleton className='w-10 h-4 rounded-none' />
                 ) : (
-                  trainingData?.trainingTotals?.nextWeek ?? 0
+                  trainingData?.trainingTotals?.nextWeek ?? '-'
                 )}
               </TableTd>
             </TableRow>

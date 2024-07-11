@@ -19,10 +19,12 @@ export function getUser() {
 
   const authData = JSON.parse(authCookie?.value)
 
-  if (!authData?.token) redirect('/auth/login')
+  if (!authData?.token || !authData?.user) redirect('/auth/login')
 
   return {
     token: authData.token as string,
     user: authData.user as UserProps,
+    refreshToken: authData.refreshToken as string,
+    keepLogin: authData.keepLogin as boolean,
   }
 }

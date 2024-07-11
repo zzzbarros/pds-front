@@ -25,25 +25,25 @@ export function BaseTrainingCard({ trainingType, description, duration, pse, psr
         isPlanned && 'bg-primary-night'
       )}
     >
-      <p className='text-xs text-white text-ellipsis line-clamp-1'>
+      <p className='text-base md:text-xs text-white text-ellipsis line-clamp-1'>
         Tipo: <strong>{typeof trainingType === 'string' ? trainingType : trainingType.name}</strong>.
       </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-1'>
+      <p className='text-base md:text-xs text-white text-ellipsis line-clamp-1'>
         Duração: <strong>{duration} minutos</strong>.
       </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-1'>
+      <p className='text-base md:text-xs text-white text-ellipsis line-clamp-1'>
         PSE: <strong>{pse}</strong>.
       </p>
-      <p className='text-xs text-white text-ellipsis line-clamp-1'>
-        Carga: <strong>{load} U.A.</strong>.
+      <p className='text-base md:text-xs text-white text-ellipsis line-clamp-1'>
+        Carga: <strong>{load} U.A.</strong>
       </p>
       {psr && (
-        <p className='text-xs text-white text-ellipsis line-clamp-1'>
+        <p className='text-base md:text-xs text-white text-ellipsis line-clamp-1'>
           PSR: <strong>{psr}</strong>
         </p>
       )}
       {description && (
-        <p className='text-xs text-white text-ellipsis line-clamp-2'>
+        <p className='text-base md:text-xs text-white text-ellipsis line-clamp-2'>
           Descrição: <strong>{description}</strong>.
         </p>
       )}
