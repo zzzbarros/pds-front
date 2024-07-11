@@ -1,3 +1,5 @@
+import { clientFetcher } from '../client-fetcher'
+
 class API {
   private headers = { 'Content-Type': 'application/json' }
   private baseUrl = process.env.NEXT_PUBLIC_API_URL ?? ''
@@ -35,13 +37,12 @@ class API {
       token: string
     }): Promise<{ ok: boolean; title: string; message: string; conflict?: boolean }> => {
       try {
-        const res = await fetch(this.baseUrl.concat('auth/create-password'), {
+        const res = await clientFetcher('auth/create-password', {
           method: 'POST',
-          headers: this.headers,
           body: JSON.stringify(data),
           cache: 'no-cache',
         })
-        const response = await res.json()
+        const response = await res.data
         return { ok: res.ok, title: response.title, message: response.message }
       } catch {
         return {
@@ -73,33 +74,33 @@ class API {
         }
     > => {
       try {
-        const res = await fetch(this.baseUrl.concat('auth/login'), {
+        const res = await clientFetcher('auth/login', {
           method: 'POST',
-          headers: this.headers,
           body: JSON.stringify(data),
           cache: 'no-cache',
         })
-        const response = await res.json()
-        return { ok: res.ok, data: response }
+        return { ok: res.ok, data: res.data }
       } catch {
         return {
           ok: false,
-          data: { title: 'Desculpe, parece que ocorreu um erro.', message: 'Tente novamente em instantes...' },
+          data: {
+            title: 'Desculpe, parece que ocorreu um erro.',
+            message: 'Tente novamente em instantes...',
+          },
         }
       }
     },
-  }
-
-  public athletes = {
-    create: async (data: any) => {
+    forgotPassword: async (data: {
+      email: string
+    }): Promise<{ ok: boolean; title: string; message: string; conflict?: boolean }> => {
       try {
-        const res = await fetch(this.baseUrl.concat('athletes'), {
+        const res = await clientFetcher('auth/forgot-password', {
           method: 'POST',
-          headers: this.headers,
           body: JSON.stringify(data),
+          cache: 'no-cache',
         })
-        const response = await res.json()
-        return { ok: res.ok, data: response }
+        const response = await res.data
+        return { ok: res.ok, title: response.title, message: response.message }
       } catch {
         return {
           ok: false,
