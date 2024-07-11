@@ -34,7 +34,11 @@ export function DatePicker({ control, label, name, description, disabled = () =>
                   variant='outline'
                   className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                 >
-                  {field.value ? format(field.value, 'PPP', { locale: ptBR }) : <span>Selecione a data</span>}
+                  {field.value ? (
+                    format(field.value, 'PPP', { locale: ptBR })
+                  ) : (
+                    <span className='text-lg md:text-sm'>Selecione a data</span>
+                  )}
                   <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                 </Button>
               </FormControl>
