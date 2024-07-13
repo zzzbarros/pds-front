@@ -18,6 +18,7 @@ import {
 } from '@/components/ui'
 import { clientFetcher } from '@/services'
 import Link from 'next/link'
+import { RouteEnum } from '@/enums'
 
 type FormProps = z.input<typeof schema>
 
@@ -99,7 +100,7 @@ export default function CreatePassword() {
             {!isSubmitting && <Send size={20} />}
             Enviar
           </Button>
-          <Link href='/auth/login'>
+          <Link href={RouteEnum.LOGIN}>
             <Button variant='ghost' type='button' className='w-fit text-primary-medium'>
               <ArrowLeft size={20} />
               Voltar

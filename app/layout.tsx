@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
 export const metadata: Metadata = {
   title: 'Training Track',
-  description: 'Controle a carga de treino do seu atleta',
+  description: 'Controle a carga de treino do seu atleta!',
 }
 
 export default function RootLayout({

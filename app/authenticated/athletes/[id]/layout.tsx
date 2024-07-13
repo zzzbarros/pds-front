@@ -10,6 +10,7 @@ import {
 import { Suspense } from 'react'
 import { TabsComponents } from './components'
 import { Details } from './components/details'
+import { RouteEnum } from '@/enums'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,11 +23,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <Breadcrumb className='print:hidden'>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href='/authenticated'>Inicio</BreadcrumbLink>
+              <BreadcrumbLink href={RouteEnum.AUTHENTICATED}>Inicio</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href='/authenticated/athletes'>Atletas</BreadcrumbLink>
+              <BreadcrumbLink href={RouteEnum.ATHLETES}>Atletas</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

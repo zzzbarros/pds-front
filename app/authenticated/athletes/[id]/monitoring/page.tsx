@@ -184,7 +184,7 @@ export default function Monitoring() {
   }
 
   return (
-    <section className=' w-full h-full flex flex-col gap-6 print:gap-4'>
+    <section className='w-full h-full flex flex-col gap-6 print:gap-4'>
       <div className='flex flex-col lg:flex-row gap-4 items-center mb-2 w-full justify-between'>
         <div className='flex gap-4 items-center w-ful flex-col lg:flex-row w-full'>
           <Input type='week' className='print:hidden w-full lg:max-w-44' onChange={handleWeekInput} value={week} />

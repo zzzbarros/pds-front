@@ -2,13 +2,13 @@
 
 import { usePathname } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
-import { AuthTabEnum } from '../enums'
+import { AuthTabEnum } from '@/enums'
 
 interface Props {
   children: React.ReactNode
 }
 
-export function TabsComponents({ children }: Props) {
+export function TabComponent({ children }: Props) {
   const route = usePathname().split('/')[2]
 
   const defaultTabByRoute = {

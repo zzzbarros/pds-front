@@ -6,11 +6,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  SearchInput,
   Skeleton,
 } from '@/components/ui'
 import List from './list'
 import { Create } from './create'
-import { SearchInput } from '@/components/ui/search-input'
+import { RouteEnum } from '@/enums'
 
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -26,7 +27,7 @@ export default async function AthleteList({ searchParams }: Props) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href='/authenticated'>Inicio</BreadcrumbLink>
+              <BreadcrumbLink href={RouteEnum.AUTHENTICATED}>Inicio</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

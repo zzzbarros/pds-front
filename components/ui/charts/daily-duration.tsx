@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Chart as ChartJS,
   LinearScale,
@@ -43,7 +45,7 @@ export function DailyDurationChart(props: Props) {
     datasets: [
       {
         type: 'line' as const,
-        label: 'PSE Planejada',
+        label: 'PSE Planejado',
         backgroundColor: '#624F96',
         borderColor: '#624F96',
         lineTension: 0.3,
@@ -53,7 +55,7 @@ export function DailyDurationChart(props: Props) {
       },
       {
         type: 'line' as const,
-        label: 'PSE',
+        label: 'PSE Realizado',
         borderColor: '#E60000',
         backgroundColor: '#E60000',
         lineTension: 0.3,
@@ -63,7 +65,7 @@ export function DailyDurationChart(props: Props) {
       },
       {
         type: 'bar' as const,
-        label: 'Tempo Total Planejado de Treinos - Em minutos',
+        label: 'Tempo Total Planejado do Treinos (minutos)',
         backgroundColor: '#8B6DD7',
         borderColor: '#8B6DD7',
         borderRadius: 8,
@@ -72,7 +74,7 @@ export function DailyDurationChart(props: Props) {
       },
       {
         type: 'bar' as const,
-        label: 'Tempo Total de Treinos Realizada - Em minutos',
+        label: 'Tempo Total de Treinos Realizada (minutos)',
         backgroundColor: '#313B56',
         borderColor: '#313B56',
         borderRadius: 8,

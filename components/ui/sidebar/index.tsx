@@ -1,26 +1,21 @@
 'use client'
 
+import { deleteCookie } from 'cookies-next'
+import { useRouter } from 'next-nprogress-bar'
 import { Bolt, Home, LogOut, Menu, Users } from 'lucide-react'
 import { MenuButton } from './menu'
-import { Close } from '@radix-ui/react-dialog'
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../sheet'
 import { Button } from '../button'
-import { useRouter } from 'next-nprogress-bar'
-import { deleteCookie } from 'cookies-next'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../sheet'
+import { RouteEnum } from '@/enums'
 
 const menus = [
-  { href: ['/authenticated'], label: 'Inicio', icon: <Home /> },
+  { href: [RouteEnum.AUTHENTICATED], label: 'Inicio', icon: <Home /> },
   {
-    href: [
-      '/authenticated/athletes',
-      '/authenticated/athletes/[id]/monitoring',
-      '/authenticated/athletes/[id]/training-planning',
-      '/authenticated/athletes/[id]/training',
-    ],
+    href: [RouteEnum.ATHLETES, RouteEnum.MONITORY, RouteEnum.TRAININGS, RouteEnum.TRAINING_PLANNING],
     label: 'Atletas',
     icon: <Users />,
   },
-  { href: ['/authenticated/training-types'], label: 'Tipos de Treino', icon: <Bolt /> },
+  { href: [RouteEnum.TRAINING_TYPES], label: 'Tipos de Treino', icon: <Bolt /> },
 ]
 
 interface Props {
@@ -32,7 +27,8 @@ export function Sidebar({ isMobile = false }: Props) {
 
   function handleSignOut() {
     deleteCookie('user')
-    router.replace('/auth/login')
+    router.refresh()
+    router.replace(RouteEnum.LOGIN)
   }
 
   if (isMobile) {
@@ -46,9 +42,9 @@ export function Sidebar({ isMobile = false }: Props) {
           <div className='flex flex-col justify-between h-full relative'>
             <menu className='flex flex-col gap-2 w-full'>
               {menus.map((props) => (
-                <Close asChild key={props.label}>
+                <SheetClose asChild key={props.label}>
                   <MenuButton {...props} />
-                </Close>
+                </SheetClose>
               ))}
             </menu>
             <Button variant='outline' className='w-full absolute bottom-0' onClick={handleSignOut}>

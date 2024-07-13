@@ -1,0 +1,13 @@
+export enum RouteEnum {
+  HOME = '/',
+  LOGIN = '/auth/login',
+  REGISTER = '/auth/register',
+  CREATE_PASSWORD = '/auth/create-password',
+  FORGOT_PASSWORD = '/auth/forgot-password',
+  AUTHENTICATED = '/authenticated',
+  ATHLETES = '/authenticated/athletes',
+  MONITORY = '/authenticated/athletes/:ID/monitoring',
+  TRAININGS = '/authenticated/athletes/:ID/training',
+  TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning',
+  TRAINING_TYPES = '/authenticated/training-types',
+}
