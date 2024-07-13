@@ -93,7 +93,7 @@ export default function LoginPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex flex-col max-w-xs md:max-w-sm mx-auto gap-6 text-left'
         >
-          <div className='flex flex-col gap-4 md:gap-4 md:gap-3'>
+          <div className='flex flex-col gap-4 md:gap-3'>
             {fields.map(({ label, name, placeholder, type, autoComplete }, index) => (
               <FormField
                 key={name}
