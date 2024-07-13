@@ -11,8 +11,9 @@ import {
   Logo,
   Sidebar,
 } from '@/components/ui'
-import { LogoutButton } from './components/logoutButton'
 import { getUser } from '../auth/get-user'
+import { AuthTemplate } from '@/components/templates'
+import { RouteEnum } from '@/enums'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const { user } = getUser()
@@ -28,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className='w-full min-h-screen relative'>
       <header className='px-5 lg:px-9 py-4 flex justify-between items-center border-b border-[#DEDFE3] fixed w-full bg-white z-20'>
-        <Logo href='/authenticated/' />
+        <Logo href={RouteEnum.AUTHENTICATED} />
         <span className='inline xl:hidden'>
           <Sidebar isMobile />
         </span>
@@ -46,7 +47,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <DropdownMenuItem disabled>Perfil</DropdownMenuItem>
               <DropdownMenuItem disabled>Configurações</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <LogoutButton />
+              <AuthTemplate.LogoutButton />
             </DropdownMenuContent>
           </DropdownMenu>
         </span>

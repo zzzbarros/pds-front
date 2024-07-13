@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Activity, Calendar, Trophy } from 'lucide-react'
 import { Button, DailyDurationChart, DailyLoadChart, Footer, Logo, WeekLoadChart } from '@/components/ui'
 import { generateRandomNumbersArray } from '@/lib/utils'
+import { RouteEnum } from '@/enums'
 
 export default function Home() {
   return (
@@ -10,10 +11,10 @@ export default function Home() {
       <header className='w-full flex px-16 py-8 justify-center md:justify-between border-b border-input'>
         <Logo />
         <div className='hidden md:flex gap-6'>
-          <Link href='/auth/register'>
+          <Link href={RouteEnum.REGISTER}>
             <Button variant='outline'>Criar Conta</Button>
           </Link>
-          <Link href='/auth/login'>
+          <Link href={RouteEnum.LOGIN}>
             <Button>Entrar</Button>
           </Link>
         </div>
@@ -22,10 +23,10 @@ export default function Home() {
         <div className='w-full flex flex-col items-center gap-16 justify-center px-14'>
           <Image src='/logo.svg' alt='Training Track Logo' width={340} height={276} priority />
           <div className='w-full flex flex-col items-center gap-4'>
-            <Link href='/auth/register'>
+            <Link href={RouteEnum.REGISTER}>
               <Button className='px-10'>Criar Conta</Button>
             </Link>
-            <Link href='/auth/login'>
+            <Link href={RouteEnum.LOGIN}>
               <Button variant='link' className='flex md:hidden px-10 underline'>
                 Entrar
               </Button>
