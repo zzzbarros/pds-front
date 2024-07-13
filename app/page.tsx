@@ -32,7 +32,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <Image src='/mockup.svg' alt='Training Track Mockup' width={1200} height={777} priority />
+        <Image src='/banner.svg' alt='Training Track Banner' width={1200} height={777} priority />
       </div>
       <div className='w-full flex mt-12 gap-4 justify-around flex-wrap bg-primary-medium p-8 py-12 md:px-12 text-background text-xl md:text-2xl font-semibold  divide-background'>
         <span className='w-full md:w-fit flex justify-around gap-4 md:gap-12 items-center '>
