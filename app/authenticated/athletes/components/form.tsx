@@ -5,6 +5,7 @@ import { Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useScreenDetector } from '@/hooks'
 import { clientFetcher } from '@/services'
 import {
   Form,
@@ -60,6 +61,7 @@ const schema = z
 
 export function AthleteForm({ closeDrawer, defaultValues }: Props) {
   const { toast } = useToast()
+  const { isMobile } = useScreenDetector()
   const actionTitle = defaultValues ? 'Editar' : 'Cadastrar'
 
   const form = useForm<AthleteFormProps>({
@@ -127,7 +129,7 @@ export function AthleteForm({ closeDrawer, defaultValues }: Props) {
                   <FormItem>
                     <FormLabel>Nome do Atleta</FormLabel>
                     <FormControl>
-                      <Input {...field} autoFocus placeholder='Digite o nome do completo...' />
+                      <Input {...field} autoFocus={!isMobile} placeholder='Digite o nome do completo...' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

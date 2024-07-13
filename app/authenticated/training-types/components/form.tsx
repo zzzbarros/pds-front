@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save } from 'lucide-react'
 import { clientFetcher } from '@/services'
+import { useScreenDetector } from '@/hooks'
 import {
   Button,
   Form,
@@ -47,6 +48,7 @@ const schema = z
 
 export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
   const { toast } = useToast()
+  const { isMobile } = useScreenDetector()
 
   const actionLabel = defaultValues ? 'Editar' : 'Cadastrar'
 
@@ -112,7 +114,7 @@ export function TrainingTypeForm({ closeDrawer, defaultValues }: Props) {
                   <FormItem>
                     <FormLabel>Nome do Tipo de Treino</FormLabel>
                     <FormControl>
-                      <Input {...field} autoFocus placeholder='Digite o nome...' />
+                      <Input {...field} autoFocus={!isMobile} placeholder='Digite o nome...' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
