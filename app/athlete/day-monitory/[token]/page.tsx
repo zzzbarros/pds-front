@@ -1,12 +1,11 @@
 'use client'
 
-import Image from 'next/image'
 import { startTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Angry, Frown, Annoyed, Smile, Laugh, CircleCheck, Send } from 'lucide-react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, toast } from '@/components/ui'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, Logo, toast } from '@/components/ui'
 import { BaseTemplate } from '@/components/templates'
 import { clientFetcher } from '@/services'
 import type { PageProps } from '@/types'
@@ -106,7 +105,7 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
             className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-4 md:gap-3 h-fit text-center text-balance'
           >
             <span className='hidden xl:inline'>
-              <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
+              <Logo />
             </span>
             <span className='text-primary-night text-xl md:text-2xl font-semibold'>
               Bem-estar enviado com sucesso, {name}!
@@ -130,7 +129,7 @@ export default function AthleteDayMonitoryPage({ params, searchParams }: PagePro
           className='w-fit border border-zinc-300 rounded-md p-8 flex flex-col items-center gap-4 md:gap-4'
         >
           <span className='hidden xl:inline'>
-            <Image src='/logo.svg' alt='Training Track Logo' width={135} height={48} priority />
+            <Logo />
           </span>
           <span className='text-primary-night text-xl md:text-2xl font-semibold'>Olá {name}, bom dia!</span>
           <h1 className='text-primary-night text-lg md:text-xl font-medium text-center text-balance'>
