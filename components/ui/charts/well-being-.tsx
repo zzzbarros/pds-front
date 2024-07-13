@@ -1,3 +1,5 @@
+'use client'
+
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
@@ -18,12 +20,13 @@ interface Props {
 export function WellBeingChart(props: Props) {
   const { labels, musclePain, fatigue, humor, nightOfSleep, stress } = props
 
-  const { plugins, interaction, responsive } = BASE_OPTIONS
+  const { plugins, interaction, responsive, maintainAspectRatio } = BASE_OPTIONS
 
   const options = {
     plugins,
     interaction,
     responsive,
+    maintainAspectRatio,
   }
 
   const data = {
@@ -69,7 +72,7 @@ export function WellBeingChart(props: Props) {
 
   return (
     <ChartWrapper title='Monitoramento de Bem-Estar' className='print:mt-16'>
-      <Bar options={options} data={data} width={100} height={50} />
+      <Bar options={options} data={data} />
     </ChartWrapper>
   )
 }

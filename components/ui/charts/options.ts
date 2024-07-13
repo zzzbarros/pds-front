@@ -2,6 +2,7 @@ type Align = 'end' | 'start' | 'center' | 'bottom' | 'left' | 'right'
 type Anchor = 'center' | 'start' | 'end'
 
 export const options = {
+  maintainAspectRatio: false,
   responsive: true,
   interaction: {
     mode: 'index' as const,
@@ -27,7 +28,7 @@ export const options = {
       backgroundColor: (chart: any) => {
         return chart.dataset.backgroundColor
       },
-      formatter: Math.round,
+      formatter: (v: number) => v.toLocaleString(),
       anchor: 'center' as Anchor,
       offset: -12,
       align: 'start' as Align,
