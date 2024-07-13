@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { BaseTemplate } from '@/components/templates'
-import { TabsComponents } from './components'
+import { BaseTemplate, AuthTemplate } from '@/components/templates'
+import { RouteEnum } from '@/enums'
 
 interface Props {
   children: React.ReactNode
@@ -13,13 +13,13 @@ export default function AuthLayout({ children }: Props) {
   if (authCookie?.value) {
     const authData = JSON.parse(authCookie.value)
     if (!!authData?.token) {
-      return redirect('/authenticated')
+      return redirect(RouteEnum.AUTHENTICATED)
     }
   }
 
   return (
     <BaseTemplate>
-      <TabsComponents>{children}</TabsComponents>
+      <AuthTemplate.TabComponent>{children}</AuthTemplate.TabComponent>
     </BaseTemplate>
   )
 }

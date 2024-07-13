@@ -20,6 +20,7 @@ import {
   useToast,
 } from '@/components/ui'
 import { services } from '@/services'
+import { RouteEnum } from '@/enums'
 
 type FormProps = z.input<typeof schema>
 type OutputFormProps = z.output<typeof schema>
@@ -67,7 +68,7 @@ export default function LoginPage() {
     const res = await services.auth.login({ email, password } as OutputFormProps)
     if (res.ok) {
       setCookie('user', JSON.stringify({ ...res.data, keepLogin }))
-      router.push('/authenticated')
+      router.push(RouteEnum.AUTHENTICATED)
       router.refresh()
     } else {
       form.setError('serverError', {})
@@ -128,7 +129,7 @@ export default function LoginPage() {
           <Button isLoading={form.formState.isSubmitting} type='submit'>
             Entrar
           </Button>
-          <Link href='/auth/forgot-password'>
+          <Link href={RouteEnum.FORGOT_PASSWORD}>
             <Button variant='link' className='w-full text-center text-primary-medium' type='button'>
               Esqueceu sua senha?
             </Button>

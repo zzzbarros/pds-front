@@ -1,6 +1,7 @@
 'use client'
 
-import { cloneElement, startTransition } from 'react'
+import { startTransition } from 'react'
+import { Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,7 +25,6 @@ import {
   Button,
 } from '@/components/ui'
 import revalidateTag from '@/lib/revalidateAction'
-import { Edit, Save } from 'lucide-react'
 
 type AthleteFormProps = z.input<typeof schema>
 type AthleteProps = z.output<typeof schema>
