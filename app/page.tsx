@@ -1,105 +1,116 @@
-import Image from "next/image";
-import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Activity, Calendar, Trophy } from 'lucide-react'
+import { Button, DailyDurationChart, DailyLoadChart, Footer, Logo, WeekLoadChart } from '@/components/ui'
+import { generateRandomNumbersArray } from '@/lib/utils'
 
 export default function Home() {
-  redirect('/auth')
   return (
-    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <div className='z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'>
-        <p className='fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30'>
-          Get started by editing&nbsp;
-          <code className='font-mono font-bold'>app/page.tsx</code>
-        </p>
-        <div className='fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none'>
-          <a
-            className='pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0'
-            href='https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            By <Image src='/vercel.svg' alt='Vercel Logo' className='dark:invert' width={100} height={24} priority />
-          </a>
+    <main className='w-full min-h-screen h-full text-balance'>
+      <header className='w-full flex px-16 py-8 justify-center md:justify-between border-b border-input'>
+        <Logo />
+        <div className='hidden md:flex gap-6'>
+          <Link href='/auth/register'>
+            <Button variant='outline'>Criar Conta</Button>
+          </Link>
+          <Link href='/auth/login'>
+            <Button>Entrar</Button>
+          </Link>
         </div>
+      </header>
+      <div className='w-full flex flex-col items-center gap-20 justify-center mt-[16vh] px-4 md:px-16'>
+        <div className='w-full flex flex-col items-center gap-16 justify-center px-14'>
+          <Image src='/logo.svg' alt='Training Track Logo' width={340} height={276} priority />
+          <div className='w-full flex flex-col items-center gap-4'>
+            <Link href='/auth/register'>
+              <Button className='px-10'>Criar Conta</Button>
+            </Link>
+            <Link href='/auth/login'>
+              <Button variant='link' className='flex md:hidden px-10 underline'>
+                Entrar
+              </Button>
+            </Link>
+          </div>
+        </div>
+        <Image src='/mockup.svg' alt='Training Track Mockup' width={1200} height={777} priority />
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className='relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert'
-          src='/next.svg'
-          alt='Next.js Logo'
-          width={180}
-          height={37}
-          priority
+      <div className='w-full flex mt-12 gap-4 justify-around flex-wrap bg-primary-medium p-8 py-12 md:px-12 text-background text-xl md:text-2xl font-semibold  divide-background'>
+        <span className='w-full md:w-fit flex justify-around gap-4 md:gap-12 items-center '>
+          <h1>Planeje</h1>
+          <Calendar className='size-12 md:size-16 lg:size-20' />
+        </span>
+        <span className='w-full md:w-fit flex justify-around gap-4 md:gap-12 items-center'>
+          <h1>Execute</h1>
+          <Trophy className='size-12 md:size-16 lg:size-20' />
+        </span>
+        <span className='w-full md:w-fit flex justify-around gap-4 md:gap-12 items-center'>
+          <h1>Monitore</h1>
+          <Activity className='size-12 md:size-16 lg:size-20' />
+        </span>
+      </div>
+      <article className='w-full h-full flex flex-col gap-4 text-primary-night py-12 md:px-12 p-8 font-medium text-xl'>
+        <h2 className='w-full text-center font-bold'>
+          Tenha acesso ao painel de controle da <span className='text-primary-medium'>Carga Diária de Treinamento</span>
+          .
+        </h2>
+        <p className='text-lg text-center text-balance text-zinc-600'>
+          A carga diária é composta pela soma das cargas de cada sessão ao longo do dia. Para calcular a carga de cada
+          sessão, é utilizado as variáveis de <strong>duração total do treino</strong>, vezes a{' '}
+          <strong>Percepção Subjetiva de Esforço (PSE)</strong> que será respondida pelo seu atleta.
+        </p>
+        <DailyLoadChart
+          labels={['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']}
+          performedTraining={generateRandomNumbersArray()}
+          plannedTraining={generateRandomNumbersArray()}
+          pse={generateRandomNumbersArray(7, 0, 10)}
+          psr={generateRandomNumbersArray(7, 0, 10)}
         />
-      </div>
-
-      <div className='mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left'>
-        <a
-          href='https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Docs{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-sm opacity-50'>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Learn{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-sm opacity-50'>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href='https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Templates{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-sm opacity-50'>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Deploy{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-balance text-sm opacity-50'>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      </article>
+      <article className='w-full h-full flex flex-col bg-primary gap-8 text-background py-12 md:px-12 p-8 font-medium text-xl'>
+        <h2 className='w-full text-center font-semibold'>
+          Compare a <span className='font-bold text-primary-dark'>Duração Total do Treino</span> x
+          <span className='font-bold text-primary-dark'> PSE</span>.
+        </h2>
+        <p className='text-lg text-center text-balance text-background'>
+          Compare individualmente se seus atletas atingem o
+          <span className='font-semibold text-primary-dark'> tempo</span> planejado para cada sessão de treinamento, bem
+          como se os <span className='font-semibold text-primary-dark'>esforços</span> esperados por você, também estão
+          sendo percebidos por eles.
+        </p>
+        <span className='bg-background text-primary-night rounded-md'>
+          <DailyDurationChart
+            labels={['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']}
+            pse={generateRandomNumbersArray(7, 0, 10)}
+            plannedPse={generateRandomNumbersArray(7, 0, 10)}
+            duration={generateRandomNumbersArray(7, 0, 60)}
+            plannedDuration={generateRandomNumbersArray(7, 0, 60)}
+          />
+        </span>
+      </article>
+      <article className='w-full h-full flex flex-col gap-4 text-primary-night py-12 p-8 md:px-12 font-medium text-xl'>
+        <h2 className='w-full text-center font-bold'>
+          Total controle sobre a <span className='text-primary-medium'>Carga da Semana</span>.
+        </h2>
+        <p className='text-lg text-center text-balance text-zinc-600'>
+          Resultado da soma das cargas diárias, ao ser monitorada ao longo de um período, possibilita análise de indices
+          de <span className='text-primary-medium font-bold'>monotonia</span> entre a relação das cargas de treinamento,
+          assim como auxilia na identificação de altos níveis de{' '}
+          <span className='text-primary-medium font-bold'>tensão</span> entre uma semana e outra, alertando sobre
+          atletas que se encontram em uma
+          <span className='text-primary-dark font-semibold'> zona de risco de lesão</span>.
+        </p>
+        <WeekLoadChart
+          week={['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']}
+          acuteChronicLoadRatio={generateRandomNumbersArray(4, 0, 4)}
+          load={{
+            performed: generateRandomNumbersArray(4, 0, 1000),
+            planned: generateRandomNumbersArray(4, 0, 1000),
+          }}
+          monotony={generateRandomNumbersArray(4, 0, 2)}
+          strain={generateRandomNumbersArray(4, 0, 3000)}
+        />
+      </article>
+      <Footer />
     </main>
   )
 }
