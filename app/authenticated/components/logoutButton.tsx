@@ -10,7 +10,7 @@ export function LogoutButton() {
 
   function logout() {
     deleteCookie('user')
-    router.replace('/auth/login')
+    router.refresh()
   }
 
   return (
