@@ -15,6 +15,8 @@ const menus = [
       RouteEnum.ATHLETES,
       RouteEnum.CREATE_ATHLETE,
       RouteEnum.UPDATE_ATHLETE,
+      RouteEnum.CREATE_TRAINING,
+      RouteEnum.UPDATE_TRAINING,
       RouteEnum.MONITORY,
       RouteEnum.TRAININGS,
       RouteEnum.TRAINING_PLANNING,

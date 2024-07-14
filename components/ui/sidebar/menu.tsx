@@ -12,8 +12,10 @@ interface Props {
 
 export function MenuButton({ href, label, icon }: Props) {
   const pathname = usePathname()
-  const { id = '' } = useParams()
-  const isActive = href.map((route) => route.replace(':ID', id as string)).includes(pathname)
+  const { id = '', child_id = '' } = useParams()
+  const isActive = href
+    .map((route) => route.replace(':ID', id as string).replace(':CHILD_ID', child_id as string))
+    .includes(pathname)
 
   return (
     <Link href={href[0]} className='rounded-md' prefetch={true}>

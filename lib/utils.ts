@@ -23,8 +23,8 @@ export function generateRandomNumbersArray(count: number = 7, min: number = 0, m
   return randomNumbers
 }
 
-export function buildingRouteWithId(route: RouteEnum, id: string) {
-  return route.replace(':ID', id)
+export function buildingRouteWithId(route: RouteEnum, id: string, childId = '') {
+  return route.replace(':ID', id).replace(':CHILD_ID', childId)
 }
 
 export * from './dates'

@@ -10,6 +10,8 @@ export enum RouteEnum {
   UPDATE_ATHLETE = '/authenticated/athletes/:ID/update',
   MONITORY = '/authenticated/athletes/:ID/monitoring',
   TRAININGS = '/authenticated/athletes/:ID/training',
+  CREATE_TRAINING = '/authenticated/athletes/:ID/training/create',
+  UPDATE_TRAINING = '/authenticated/athletes/:ID/training/:CHILD_ID/update',
   TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning',
   TRAINING_TYPES = '/authenticated/training-types',
 }

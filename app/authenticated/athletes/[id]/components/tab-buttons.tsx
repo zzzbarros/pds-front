@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
+import { buildingRouteWithId } from '@/lib/utils'
+import { RouteEnum } from '@/enums'
 
 interface Props {
   children: React.ReactNode
@@ -22,15 +24,26 @@ const defaultTabByRoute = {
 } as Record<string, TabsEnum>
 
 export function TabsComponents({ children }: Props) {
-  const route = usePathname().split('/')[4]
+  const paths = usePathname().split('/')
+  const route = paths[4]
+  const athleteId = paths[3]
 
   return (
     <Tabs value={defaultTabByRoute[route]} className='w-full flex flex-col gap-6'>
       <TabsList className='w-full md:w-fit print:hidden'>
         <TabsTrigger value={TabsEnum.MONITORING}>Monitoramento</TabsTrigger>
-        <TabsTrigger value={TabsEnum.TRAINING_PLANNING}>Treinos Planejados</TabsTrigger>
-        <TabsTrigger value={TabsEnum.TRAINING}>Treinos Executados</TabsTrigger>
-        <TabsTrigger value={TabsEnum.UPDATE}>Informações</TabsTrigger>
+        <TabsTrigger
+          href={buildingRouteWithId(RouteEnum.TRAINING_PLANNING, athleteId)}
+          value={TabsEnum.TRAINING_PLANNING}
+        >
+          Treinos Planejados
+        </TabsTrigger>
+        <TabsTrigger href={buildingRouteWithId(RouteEnum.TRAININGS, athleteId)} value={TabsEnum.TRAINING}>
+          Treinos Executados
+        </TabsTrigger>
+        <TabsTrigger href={buildingRouteWithId(RouteEnum.UPDATE_ATHLETE, athleteId)} value={TabsEnum.UPDATE}>
+          Informações
+        </TabsTrigger>
       </TabsList>
       {children}
     </Tabs>

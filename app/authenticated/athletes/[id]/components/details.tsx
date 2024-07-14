@@ -17,5 +17,5 @@ export function Details() {
   if (isLoading) return <Skeleton className='w-32 h-5' />
   if (!data) return null
 
-  return <h1 className='text-xl font-semibold text-primary-medium'>- {data.name}</h1>
+  return <h1 className='text-xl font-semibold text-primary-medium'>{data.name}</h1>
 }

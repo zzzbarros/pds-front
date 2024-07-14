@@ -32,7 +32,7 @@ TabsList.displayName = TabsPrimitive.List.displayName
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & { href?: string }
 >(({ className, onClick, ...props }, ref) => {
   const router = useRouter()
   return (
@@ -43,7 +43,7 @@ const TabsTrigger = React.forwardRef<
         className
       )}
       onClick={(e) => {
-        router.replace(props?.value)
+        router.replace(props?.href ? props.href : props?.value)
         onClick?.(e)
       }}
       {...props}
