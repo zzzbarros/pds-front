@@ -41,16 +41,17 @@ export default function Unsubscribe(props: IPageProps) {
   return (
     <BaseTemplate>
       <section className='w-full h-full text-center p-8 my-auto'>
-        <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>Deseja cancelar a inscrição?</h1>
+        <h1 className='text-3xl md:text-2xl text-primary-medium font-bold'>
+          Você tem certeza que deseja cancelar a inscrição?
+        </h1>
         <div className='w-full flex justify-center'>
           <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium w-full md:w-2/4 text-balance'>
-            Caso cancele a inscrição você passará a não receber mais e-mails de monitoramento. Para prosseguir clique no
-            botão abaixo,
-            <strong> essa ação não poderá ser desfeita!</strong>
+            Caso cancele a inscrição você não recebera mais nenhum e-mail de monitoramento.{' '}
+            <strong>Essa ação não poderá ser desfeita!</strong>
           </p>
         </div>
         <p className='mb-8 text-lg'>
-          Email:<strong> {email}</strong>
+          E-mail solicitante:<span className='text-primary-dark font-medium'> {email}</span>
         </p>
         <Button isLoading={isLoading} className='font-semibold' onClick={onSubmit}>
           Cancelar Inscrição

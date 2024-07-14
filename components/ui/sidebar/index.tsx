@@ -11,7 +11,14 @@ import { RouteEnum } from '@/enums'
 const menus = [
   { href: [RouteEnum.AUTHENTICATED], label: 'Inicio', icon: <Home /> },
   {
-    href: [RouteEnum.ATHLETES, RouteEnum.MONITORY, RouteEnum.TRAININGS, RouteEnum.TRAINING_PLANNING],
+    href: [
+      RouteEnum.ATHLETES,
+      RouteEnum.CREATE_ATHLETE,
+      RouteEnum.UPDATE_ATHLETE,
+      RouteEnum.MONITORY,
+      RouteEnum.TRAININGS,
+      RouteEnum.TRAINING_PLANNING,
+    ],
     label: 'Atletas',
     icon: <Users />,
   },

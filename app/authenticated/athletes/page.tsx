@@ -1,4 +1,6 @@
+import Link from 'next/link'
 import { Suspense } from 'react'
+import { Plus } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,11 +8,11 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  Button,
   SearchInput,
   Skeleton,
 } from '@/components/ui'
 import List from './list'
-import { Create } from './create'
 import { RouteEnum } from '@/enums'
 
 interface Props {
@@ -38,7 +40,12 @@ export default async function AthleteList({ searchParams }: Props) {
       </div>
       <div className='pt-6 flex justify-between flex-wrap sm:flex-nowrap gap-4'>
         <SearchInput placeholder='Procure pelo nome do atleta ou e-mail...' value={search as string} />
-        <Create />
+        <Link href={RouteEnum.CREATE_ATHLETE} className='w-full md:w-fit'>
+          <Button className='w-full md:w-fit px-6 md:px-10'>
+            <Plus />
+            Cadastrar atleta
+          </Button>
+        </Link>
       </div>
       <Suspense
         fallback={

@@ -11,12 +11,14 @@ enum TabsEnum {
   TRAINING_PLANNING = 'training-planning',
   MONITORING = 'monitoring',
   TRAINING = 'training',
+  UPDATE = 'update',
 }
 
 const defaultTabByRoute = {
   [TabsEnum.TRAINING_PLANNING]: TabsEnum.TRAINING_PLANNING,
   [TabsEnum.MONITORING]: TabsEnum.MONITORING,
   [TabsEnum.TRAINING]: TabsEnum.TRAINING,
+  [TabsEnum.UPDATE]: TabsEnum.UPDATE,
 } as Record<string, TabsEnum>
 
 export function TabsComponents({ children }: Props) {
@@ -28,6 +30,7 @@ export function TabsComponents({ children }: Props) {
         <TabsTrigger value={TabsEnum.MONITORING}>Monitoramento</TabsTrigger>
         <TabsTrigger value={TabsEnum.TRAINING_PLANNING}>Treinos Planejados</TabsTrigger>
         <TabsTrigger value={TabsEnum.TRAINING}>Treinos Executados</TabsTrigger>
+        <TabsTrigger value={TabsEnum.UPDATE}>Informações</TabsTrigger>
       </TabsList>
       {children}
     </Tabs>
