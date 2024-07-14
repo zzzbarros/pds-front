@@ -2,7 +2,7 @@
 
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
-import useSWR from 'swr'
+import { useSWR } from '@/lib/swr'
 import { clientFetcher } from '@/services'
 import {
   FormControl,
@@ -72,7 +72,7 @@ export function TrainingForm({ onSubmit }: Props) {
 
   return (
     <form
-      id='athlete'
+      id='training'
       onSubmit={form.handleSubmit(onSubmit)}
       className='text-left min-h-[340px] w-full md:w-4/5 xl:w-2/5'
     >

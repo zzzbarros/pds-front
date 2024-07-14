@@ -1,9 +1,9 @@
 'use client'
 
+import { useParams } from 'next/navigation'
 import { Skeleton } from '@/components/ui'
 import { clientFetcher } from '@/services'
-import { useParams } from 'next/navigation'
-import useSWR from 'swr'
+import { useSWR } from '@/lib/swr'
 
 export function Details() {
   const { id = '' } = useParams()

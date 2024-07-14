@@ -80,13 +80,13 @@ export default function CreateTraining() {
       <Form {...form}>
         <TrainingTemplate.Form onSubmit={onSubmit} />
       </Form>
-      <footer className='flex flex-row justify-between py-4  w-full md:w-4/5 xl:w-2/5 '>
+      <footer className='flex flex-row justify-between py-4 w-full md:w-4/5 xl:w-2/5'>
         <Link href={buildingRouteWithId(RouteEnum.TRAININGS, params.id as string)} scroll={true}>
           <Button variant='outline'>Cancelar</Button>
         </Link>
         <Button
           title={actionText}
-          form='athlete'
+          form='training'
           className='w-fit'
           type='submit'
           isLoading={form.formState.isSubmitting}

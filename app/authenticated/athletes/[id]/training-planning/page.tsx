@@ -1,9 +1,10 @@
 'use client'
 
+import Link from 'next/link'
 import type { ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CircleCheckBig, Info, Plus } from 'lucide-react'
-import useSWR from 'swr'
+import { useSWR } from '@/lib/swr'
 import { clientFetcher } from '@/services'
 import {
   Button,
@@ -29,10 +30,11 @@ import {
   getPreviousWeek,
   getWeekDatesFromInput,
   getWeekNumberFromDate,
+  buildingRouteWithId,
 } from '@/lib/utils'
-import { PlanningForm } from './form'
 import { TrainingCard } from './components'
 import { useDrawerContext } from '@/contexts'
+import { RouteEnum } from '@/enums'
 
 export interface BaseTrainingProps {
   id: string
@@ -133,15 +135,12 @@ export default function PlanningPage() {
           </div>
           {isLoading && <Spinner />}
         </div>
-        <Button
-          className='px-10 w-full lg:w-fit'
-          onClick={() => {
-            drawer.current?.open(<PlanningForm onSuccess={onSuccessPlanningTraining} />)
-          }}
-        >
-          <Plus />
-          Planejar Treino
-        </Button>
+        <Link className='w-full lg:w-fit' href={buildingRouteWithId(RouteEnum.CREATE_TRAINING_PLANNING, id as string)}>
+          <Button className='px-10 w-full lg:w-fit'>
+            <Plus />
+            Planejar Treino
+          </Button>
+        </Link>
       </div>
       <section
         tabIndex={0}
@@ -162,17 +161,13 @@ export default function PlanningPage() {
             >
               <div className='flex gap-1 items-center w-full justify-center relative'>
                 <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
-                <button
+                <Link
                   data-current-day={isCurrentDay}
+                  href={buildingRouteWithId(RouteEnum.CREATE_TRAINING_PLANNING, id as string).concat(`?date=${date}`)}
                   className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
-                  onClick={() => {
-                    drawer.current?.open(
-                      <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
-                    )
-                  }}
                 >
                   <Plus size={14} />
-                </button>
+                </Link>
               </div>
               <p className='text-lg md:text-base font-medium'>{textDay}</p>
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
