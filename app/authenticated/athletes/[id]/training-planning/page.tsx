@@ -2,7 +2,7 @@
 
 import type { ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, Info, Plus } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CircleCheckBig, Info, Plus } from 'lucide-react'
 import useSWR from 'swr'
 import { clientFetcher } from '@/services'
 import {
@@ -190,6 +190,15 @@ export default function PlanningPage() {
           )
         })}
       </section>
+      <ul className='flex flex-col md:flex-row md:items-center gap-1 md:gap-3 pt-4 text-sm'>
+        <li className='font-semibold'>Legenda: </li>
+        <li className='flex gap-1 items-center'>
+          <div className='size-5 bg-primary-night rounded-sm' />= Treino planejado;
+        </li>
+        <li className='flex gap-1 items-center'>
+          <CircleCheckBig className='size-5' />= Treino planejado e concluído.
+        </li>
+      </ul>
       <div className='w-full rounded-md mt-6  border border-gray-200 '>
         <Table>
           <TableHeader>

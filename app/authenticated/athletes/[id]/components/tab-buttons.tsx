@@ -39,7 +39,7 @@ export function TabsComponents({ children }: Props) {
           Treinos Planejados
         </TabsTrigger>
         <TabsTrigger href={buildingRouteWithId(RouteEnum.TRAININGS, athleteId)} value={TabsEnum.TRAINING}>
-          Treinos Executados
+          Treinos Concluídos
         </TabsTrigger>
         <TabsTrigger href={buildingRouteWithId(RouteEnum.UPDATE_ATHLETE, athleteId)} value={TabsEnum.UPDATE}>
           Informações
