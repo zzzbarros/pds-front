@@ -72,7 +72,7 @@ export default function CreateTraining() {
   return (
     <div className='flex flex-col justify-center h-full gap-5'>
       <header>
-        <h1 className='text-xl md:text-lg font-semibold'>{actionText} Treino</h1>
+        <h1 className='text-xl md:text-lg font-semibold'>{actionText} Treino Concluído.</h1>
         <p className='text-lg md:text-base text-balance'>
           Preencha os campos a seguir para {actionText.toLowerCase()} o treino do atleta na plataforma.
         </p>

@@ -296,7 +296,7 @@ export default function PlanningPage() {
       <ul className='flex flex-col md:flex-row md:items-center gap-1 md:gap-3 pt-4 text-sm'>
         <li className='font-semibold'>Legenda: </li>
         <li className='flex gap-1 items-center'>
-          <div className='size-5 bg-primary rounded-sm' />= Treino executado;
+          <div className='size-5 bg-primary rounded-sm' />= Treino concluído;
         </li>
         <li className='flex gap-1 items-center'>
           <div className='size-5 bg-primary-night rounded-sm' />= Treino planejado;

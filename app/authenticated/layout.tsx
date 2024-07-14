@@ -22,8 +22,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   function getUserName() {
     const name = user.name
-    const [first, last] = name.split(' ')
-    return { name, fallback: first[0]?.concat(last[0]) }
+    const [first, last = ''] = name.split(' ')
+    const fallback = last.length ? first[0]?.concat(last[0]) : first[0]
+    return { name, fallback }
   }
 
   return (
