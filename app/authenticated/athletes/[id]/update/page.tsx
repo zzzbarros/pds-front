@@ -89,7 +89,7 @@ export default function UpdateAthlete({ params }: IPageProps) {
         description: res.data.message,
         variant: 'success',
       })
-      router.push(buildingRouteWithId(RouteEnum.MONITORY, id))
+      router.push(buildingRouteWithId(RouteEnum.MONITORY, id), { scroll: true })
     } else {
       startTransition(() => {
         toast({

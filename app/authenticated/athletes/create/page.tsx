@@ -81,7 +81,7 @@ export default function AthleteForm() {
         description: res.data.message,
         variant: 'success',
       })
-      router.push(RouteEnum.ATHLETES)
+      router.push(RouteEnum.ATHLETES, { scroll: true })
     } else {
       startTransition(() => {
         toast({
