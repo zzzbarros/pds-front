@@ -12,30 +12,30 @@ import { RouteEnum } from '@/enums'
 import { useSWR } from '@/lib/swr'
 import { buildingRouteWithId, getWeekNumberFromDate } from '@/lib/utils'
 import { Button, Form, useToast, Spinner } from '@/components/ui'
-import { TrainingTemplate, type ITrainingFormProps } from '@/components/templates'
+import { TrainingPlanningTemplate, type ITrainingPlanningFormProps } from '@/components/templates'
 
-export default function UpdateTraining() {
+export default function UpdateTrainingPlanning() {
   const router = useRouter()
   const { id: athleteId = '', child_id: trainingId = '' } = useParams()
   const { toast } = useToast()
 
-  const { data, isLoading: isLoading } = useSWR(['training', trainingId], async () => {
+  const { data, isLoading: isLoading } = useSWR(['training-planning', trainingId], async () => {
     if (!trainingId) return
     const response = await clientFetcher<
-      Omit<ITrainingFormProps, 'trainingTypeUuid'> & { trainingType: { id: string; name: string } }
-    >('trainings/'.concat(trainingId as string))
+      Omit<ITrainingPlanningFormProps, 'trainingTypeUuid'> & { trainingType: { id: string; name: string } }
+    >('training-planning/'.concat(trainingId as string))
     if (response.ok) return response.data
   })
 
-  const form = useForm<ITrainingFormProps>({
-    resolver: zodResolver(TrainingTemplate.schema),
+  const form = useForm<ITrainingPlanningFormProps>({
+    resolver: zodResolver(TrainingPlanningTemplate.schema),
     defaultValues: { ...data, trainingTypeUuid: data?.trainingType.id },
   })
 
-  async function onSubmit(data: ITrainingFormProps) {
-    const res = await clientFetcher('trainings', {
+  async function onSubmit(data: ITrainingPlanningFormProps) {
+    const res = await clientFetcher('training-planning', {
       method: 'PUT',
-      body: JSON.stringify({ ...data, athleteUuid: athleteId, id: trainingId }),
+      body: JSON.stringify({ ...data, trainingUuid: trainingId }),
     })
     if (!res.ok) {
       startTransition(() => {
@@ -47,9 +47,9 @@ export default function UpdateTraining() {
         form.setError('serverError', {})
       })
     } else {
-      form.reset({})
       const week = getWeekNumberFromDate(data.date)
-      router.replace(buildingRouteWithId(RouteEnum.TRAININGS, athleteId as string).concat(`?week=${week}`), {
+      form.reset({})
+      router.replace(buildingRouteWithId(RouteEnum.TRAINING_PLANNING, athleteId as string).concat(`?week=${week}`), {
         scroll: true,
       })
       toast({
@@ -73,15 +73,15 @@ export default function UpdateTraining() {
     <div className='flex flex-col justify-center h-full gap-5'>
       <header>
         <span className='flex gap-4'>
-          <h1 className='text-xl md:text-lg font-semibold'>{actionText} Treino</h1>
+          <h1 className='text-xl md:text-lg font-semibold'>{actionText} Planejamento de Treino</h1>
           {isLoading && <Spinner />}
         </span>
         <p className='text-lg md:text-base text-balance'>
-          Preencha os campos a seguir para {actionText.toLowerCase()} o treino do atleta na plataforma.
+          Preencha os campos a seguir para {actionText.toLowerCase()} o planejamento de treino do atleta na plataforma.
         </p>
       </header>
       <Form {...form}>
-        <TrainingTemplate.Form onSubmit={onSubmit} />
+        <TrainingPlanningTemplate.Form onSubmit={onSubmit} />
       </Form>
       <footer className='flex flex-row justify-between py-4  w-full md:w-4/5 xl:w-2/5 '>
         <Link href={buildingRouteWithId(RouteEnum.TRAININGS, athleteId as string)} scroll={true}>
@@ -89,7 +89,7 @@ export default function UpdateTraining() {
         </Link>
         <Button
           title={actionText}
-          form='training'
+          form='training-planning'
           className='w-fit'
           type='submit'
           isLoading={form.formState.isSubmitting}

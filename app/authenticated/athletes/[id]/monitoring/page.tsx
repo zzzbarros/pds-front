@@ -1,10 +1,10 @@
 'use client'
 
-import useSWR from 'swr'
 import { ChangeEvent, useMemo } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { clientFetcher } from '@/services'
+import { useSWR } from '@/lib/swr'
 import {
   Button,
   DailyLoadChart,

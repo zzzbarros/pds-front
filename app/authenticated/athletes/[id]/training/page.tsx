@@ -3,7 +3,7 @@
 import { useMemo, type ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Info, Plus, Route, Trash } from 'lucide-react'
-import useSWR from 'swr'
+import { useSWR } from '@/lib/swr'
 import { clientFetcher } from '@/services'
 import {
   BaseTrainingCard,

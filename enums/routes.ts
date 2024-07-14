@@ -13,5 +13,7 @@ export enum RouteEnum {
   CREATE_TRAINING = '/authenticated/athletes/:ID/training/create',
   UPDATE_TRAINING = '/authenticated/athletes/:ID/training/:CHILD_ID/update',
   TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning',
+  CREATE_TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning/create',
+  UPDATE_TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning/:CHILD_ID/update',
   TRAINING_TYPES = '/authenticated/training-types',
 }
