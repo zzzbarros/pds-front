@@ -6,6 +6,8 @@ export enum RouteEnum {
   FORGOT_PASSWORD = '/auth/forgot-password',
   AUTHENTICATED = '/authenticated',
   ATHLETES = '/authenticated/athletes',
+  CREATE_ATHLETE = '/authenticated/athletes/create',
+  UPDATE_ATHLETE = '/authenticated/athletes/:ID/update',
   MONITORY = '/authenticated/athletes/:ID/monitoring',
   TRAININGS = '/authenticated/athletes/:ID/training',
   TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning',

@@ -1,22 +1,17 @@
 'use client'
 
+import Link from 'next/link'
 import { EllipsisVertical, Pencil, SquareCheck, SquareX } from 'lucide-react'
 import { useDialogContext, useDrawerContext } from '@/contexts'
-import { clientFetcher } from '@/services'
 import revalidateAction from '@/lib/revalidateAction'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui'
 import { ConfirmStatusDialog } from '@/components/compositions'
-import { AthleteForm } from './form'
+import { buildingRouteWithId } from '@/lib/utils'
+import { RouteEnum } from '@/enums'
 
 export function AthleteListOptions({ isEnabled, id }: { id: string; isEnabled: boolean }) {
   const { dialog } = useDialogContext()
   const { drawer } = useDrawerContext()
-
-  async function openEdit() {
-    const response = await clientFetcher('athletes/'.concat(id))
-    if (response.ok)
-      drawer.current?.open(<AthleteForm closeDrawer={drawer.current?.close} defaultValues={response.data} />)
-  }
 
   const statusLabel = isEnabled ? 'Inativar' : 'Ativar'
 
@@ -29,10 +24,12 @@ export function AthleteListOptions({ isEnabled, id }: { id: string; isEnabled: b
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-fit'>
         <DropdownMenuItem asChild>
-          <button className='w-full text-left flex gap-2 items-center cursor-pointer' onClick={openEdit}>
-            <Pencil className='stroke-2 size-4' />
-            Editar
-          </button>
+          <Link href={buildingRouteWithId(RouteEnum.UPDATE_ATHLETE, id)}>
+            <button className='w-full text-left flex gap-2 items-center cursor-pointer'>
+              <Pencil className='stroke-2 size-4' />
+              Editar
+            </button>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <button
