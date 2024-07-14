@@ -8,7 +8,7 @@ import { Angry, Frown, Annoyed, Smile, Laugh, CircleCheck, Send } from 'lucide-r
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Button, Logo, toast } from '@/components/ui'
 import { BaseTemplate } from '@/components/templates'
 import { clientFetcher } from '@/services'
-import type { PageProps } from '@/types'
+import type { IPageProps } from '@/types'
 
 const questionsSchema = z.coerce
   .number()
@@ -44,7 +44,7 @@ const questions = [
   { value: 'humor', label: 'Como está seu humor?' },
 ]
 
-export default function AthleteDayMonitoryPage({ params, searchParams }: PageProps) {
+export default function AthleteDayMonitoryPage({ params, searchParams }: IPageProps) {
   const { token } = params
   const { name = 'atleta' } = searchParams
 
