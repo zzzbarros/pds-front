@@ -1,6 +1,6 @@
 'use client'
 
-import type { ChangeEvent } from 'react'
+import { useMemo, type ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Info, Plus, Trash } from 'lucide-react'
 import useSWR from 'swr'
@@ -46,6 +46,7 @@ interface TrainingProps {
   load: number
   psr?: number
   description?: string
+  finished?: boolean
 }
 
 interface TrainingsProps {
@@ -62,12 +63,12 @@ interface TrainingsProps {
   }
 }
 
-interface TrainingPlanningProps extends Omit<TrainingsProps, 'training'> {
+interface TrainingPlanningProps extends Omit<TrainingsProps, 'trainings'> {
   trainingPlanning: TrainingProps[]
 }
 
-function fillTrainingsByDay(date: Date, currentTrainings: TrainingProps[]): TrainingProps[] {
-  return currentTrainings?.filter((training) => compareDates(new Date(training.date), date))
+function fillTrainingsByDay<T>(date: Date, currentTrainings: T[]): T[] {
+  return currentTrainings?.filter((training) => compareDates(new Date((training as { date: Date }).date), date))
 }
 
 export default function PlanningPage() {
@@ -98,19 +99,22 @@ export default function PlanningPage() {
     return response.data as TrainingsProps
   })
 
-  const { data: plannedData, isLoading: isLoadingPlanning } = useSWR(
-    ['planned-training', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings],
-    async () => {
-      if (!showPlannedTrainings)
-        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-      const response = await clientFetcher(
-        `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
-      )
-      if (!response.ok)
-        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-      return response.data as TrainingPlanningProps
+  const {
+    data: plannedData,
+    isLoading: isLoadingPlanning,
+    mutate: mutatePlanning,
+  } = useSWR(['planned-training', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings], async () => {
+    if (!showPlannedTrainings) {
+      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
     }
-  )
+    const response = await clientFetcher(
+      `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
+    )
+    if (!response.ok) {
+      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+    }
+    return response.data as TrainingPlanningProps
+  })
 
   const weekTrainings = trainingData?.trainings ?? []
   const weekPlannedTrainings = plannedData?.trainingPlanning ?? []
@@ -139,6 +143,155 @@ export default function PlanningPage() {
     else params.set('showPlannedTrainings', 'false')
     router.push(pathname.concat('?').concat(params.toString()))
   }
+
+  async function finishTrainingPlanned(id: string) {
+    const res = await clientFetcher('training-planning/'.concat(id), {
+      method: 'PATCH',
+    })
+    if (res.ok) {
+      mutatePlanning(
+        {
+          ...plannedData!!,
+          trainingPlanning: weekPlannedTrainings?.map((t) => {
+            if (t.id !== id) return t
+            return { ...t, finished: true }
+          }),
+        },
+        { revalidate: false }
+      )
+    }
+  }
+
+  const cards = useMemo(
+    () =>
+      weekDates?.map((date) => {
+        const isCurrentDay = compareDates(date, currentDay)
+        const day = date.toLocaleDateString('pt-BR').split('/')[0]
+        const textDay = capitalizeFirstLetter(Intl.DateTimeFormat('pt-BR', { weekday: 'long' }).format(date))
+        const trainings = fillTrainingsByDay(date, weekTrainings)
+        const plannedTrainings = fillTrainingsByDay(date, weekPlannedTrainings)
+        return (
+          <li
+            key={day}
+            className={cn(
+              'py-4 border-t md:border-r border-gray-200 flex flex-col items-center rounded-t-sm group',
+              isCurrentDay && 'bg-gray-100'
+            )}
+          >
+            <div className='flex gap-2 items-center w-full justify-center relative'>
+              <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
+              <button
+                data-current-day={isCurrentDay}
+                className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
+                onClick={() => {
+                  drawer.current?.open(
+                    <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
+                  )
+                }}
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+            <p className='text-lg md:text-base font-medium'>{textDay}</p>
+            <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
+              {plannedTrainings?.map((plannedTraining) => (
+                <li key={plannedTraining.id}>
+                  <BaseTrainingCard {...plannedTraining} isPlanned>
+                    {!plannedTraining?.finished && (
+                      <Button
+                        className='mt-2 w-full bg-primary-night border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
+                        onClick={() => {
+                          drawer.current?.open(
+                            <PlanningForm
+                              method='POST'
+                              defaultValues={{
+                                date: plannedTraining.date,
+                                duration: plannedTraining.duration,
+                                description: plannedTraining.description ?? '',
+                                trainingTypeUuid:
+                                  typeof plannedTraining.trainingType === 'string'
+                                    ? plannedTraining.trainingType
+                                    : plannedTraining.trainingType.id,
+                              }}
+                              onSuccess={async (date) => {
+                                drawer.current?.close()
+                                finishTrainingPlanned(plannedTraining.id)
+                                const createdInWeek = getWeekNumberFromDate(date)
+                                if (createdInWeek === week) return mutateTrainings()
+                                router.replace(pathname.concat(`?week=${createdInWeek}`))
+                              }}
+                            />
+                          )
+                        }}
+                      >
+                        <CircleCheckBig size={20} />
+                        <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Finalizar</span>
+                      </Button>
+                    )}
+                  </BaseTrainingCard>
+                </li>
+              ))}
+              {trainings?.map((training) => (
+                <li key={training.id}>
+                  <BaseTrainingCard {...training}>
+                    <div className='flex gap-1 justify-end'>
+                      <Button
+                        className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
+                        onClick={() => {
+                          drawer.current?.open(
+                            <PlanningForm
+                              method='PUT'
+                              defaultValues={{
+                                id: training.id,
+                                date: training.date,
+                                duration: training.duration,
+                                pse: training.pse,
+                                description: training.description ?? '',
+                                psr: training.psr as number,
+                                trainingTypeUuid:
+                                  typeof training.trainingType === 'string'
+                                    ? training.trainingType
+                                    : training.trainingType.id,
+                              }}
+                              onSuccess={(date) => {
+                                drawer.current?.close()
+                                const createdInWeek = getWeekNumberFromDate(date)
+                                if (createdInWeek === week) return mutateTrainings()
+                                router.replace(pathname.concat(`?week=${createdInWeek}`))
+                              }}
+                            />
+                          )
+                        }}
+                      >
+                        <Edit size={20} />
+                        <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
+                      </Button>
+                      <Button
+                        className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
+                        onClick={() => {
+                          dialog.current?.open(
+                            <ConfirmDeleteDialog
+                              route={'trainings/'.concat(training.id)}
+                              onClose={dialog.current.close}
+                              onSuccess={mutateTrainings}
+                              title='Você tem certeza que deseja remover esse treino?'
+                            />
+                          )
+                        }}
+                      >
+                        <Trash size={20} />
+                        <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Excluir</span>
+                      </Button>
+                    </div>
+                  </BaseTrainingCard>
+                </li>
+              ))}
+            </ul>
+          </li>
+        )
+      }),
+    [weekDates, weekTrainings, weekPlannedTrainings]
+  )
 
   return (
     <section className='w-full h-full '>
@@ -186,129 +339,19 @@ export default function PlanningPage() {
         </Button>
       </div>
       <ul className='grid grid-rows-7 lg:grid-rows-1 lg:grid-cols-7 min-h-[25vh] rounded-md border border-gray-200'>
-        {weekDates?.map((date) => {
-          const isCurrentDay = compareDates(date, currentDay)
-          const day = date.toLocaleDateString('pt-BR').split('/')[0]
-          const textDay = capitalizeFirstLetter(Intl.DateTimeFormat('pt-BR', { weekday: 'long' }).format(date))
-          const trainings = fillTrainingsByDay(date, weekTrainings)
-          const plannedTrainings = fillTrainingsByDay(date, weekPlannedTrainings)
-          return (
-            <li
-              key={day}
-              className={cn(
-                'py-4 border-t md:border-r border-gray-200 flex flex-col items-center rounded-t-sm group',
-                isCurrentDay && 'bg-gray-100'
-              )}
-            >
-              <div className='flex gap-2 items-center w-full justify-center relative'>
-                <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
-                <button
-                  data-current-day={isCurrentDay}
-                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/4 animate-in'
-                  onClick={() => {
-                    drawer.current?.open(
-                      <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
-                    )
-                  }}
-                >
-                  <Plus size={14} />
-                </button>
-              </div>
-              <p className='text-lg md:text-base font-medium'>{textDay}</p>
-              <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
-                {plannedTrainings?.map((plannedTraining) => (
-                  <li key={plannedTraining.id}>
-                    <BaseTrainingCard {...plannedTraining} isPlanned>
-                      <Button
-                        className='mt-2 w-full bg-primary-night border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
-                        onClick={() => {
-                          drawer.current?.open(
-                            <PlanningForm
-                              method='POST'
-                              defaultValues={{
-                                date: plannedTraining.date,
-                                duration: plannedTraining.duration,
-                                description: plannedTraining.description ?? '',
-                                trainingTypeUuid:
-                                  typeof plannedTraining.trainingType === 'string'
-                                    ? plannedTraining.trainingType
-                                    : plannedTraining.trainingType.id,
-                              }}
-                              onSuccess={(date) => {
-                                drawer.current?.close()
-                                const createdInWeek = getWeekNumberFromDate(date)
-                                if (createdInWeek === week) return mutateTrainings()
-                                router.replace(pathname.concat(`?week=${createdInWeek}`))
-                              }}
-                            />
-                          )
-                        }}
-                      >
-                        <CircleCheckBig size={20} />
-                        <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Finalizar</span>
-                      </Button>
-                    </BaseTrainingCard>
-                  </li>
-                ))}
-                {trainings?.map((training) => (
-                  <li key={training.id}>
-                    <BaseTrainingCard {...training}>
-                      <div className='flex gap-1 justify-end'>
-                        <Button
-                          className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
-                          onClick={() => {
-                            drawer.current?.open(
-                              <PlanningForm
-                                method='PUT'
-                                defaultValues={{
-                                  id: training.id,
-                                  date: training.date,
-                                  duration: training.duration,
-                                  pse: training.pse,
-                                  description: training.description ?? '',
-                                  psr: training.psr as number,
-                                  trainingTypeUuid:
-                                    typeof training.trainingType === 'string'
-                                      ? training.trainingType
-                                      : training.trainingType.id,
-                                }}
-                                onSuccess={(date) => {
-                                  drawer.current?.close()
-                                  const createdInWeek = getWeekNumberFromDate(date)
-                                  if (createdInWeek === week) return mutateTrainings()
-                                  router.replace(pathname.concat(`?week=${createdInWeek}`))
-                                }}
-                              />
-                            )
-                          }}
-                        >
-                          <Edit size={20} />
-                          <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Editar</span>
-                        </Button>
-                        <Button
-                          className='mt-2 w-full border border-gray-200 hidden group-hover/card:flex group-focus/card:flex focus:flex animate-[enter_0.2s] group/button p-3 hover:brightness-125'
-                          onClick={() => {
-                            dialog.current?.open(
-                              <ConfirmDeleteDialog
-                                route={'trainings/'.concat(training.id)}
-                                onClose={dialog.current.close}
-                                onSuccess={mutateTrainings}
-                                title='Você tem certeza que deseja remover esse treino?'
-                              />
-                            )
-                          }}
-                        >
-                          <Trash size={20} />
-                          <span className='hidden group-hover/button:inline animate-shadow-drop-center'>Excluir</span>
-                        </Button>
-                      </div>
-                    </BaseTrainingCard>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )
-        })}
+        {cards}
+      </ul>
+      <ul className='flex flex-col md:flex-row md:items-center gap-1 md:gap-3 pt-4 text-sm'>
+        <li className='font-semibold'>Legenda: </li>
+        <li className='flex gap-1 items-center'>
+          <div className='size-5 bg-primary rounded-sm' />= Treino executado;
+        </li>
+        <li className='flex gap-1 items-center'>
+          <div className='size-5 bg-primary-night rounded-sm' />= Treino planejado;
+        </li>
+        <li className='flex gap-1 items-center'>
+          <CircleCheckBig className='size-5' />= Treino planejado e concluído.
+        </li>
       </ul>
       <div className='w-full rounded-md mt-6  border border-gray-200'>
         <Table>

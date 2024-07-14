@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { CircleCheckBig } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 interface Props {
@@ -14,9 +15,20 @@ interface Props {
   description?: string
   isPlanned?: boolean
   children?: ReactNode
+  finished?: boolean
 }
 
-export function BaseTrainingCard({ trainingType, description, duration, pse, psr, load, isPlanned, children }: Props) {
+export function BaseTrainingCard({
+  trainingType,
+  description,
+  duration,
+  pse,
+  psr,
+  load,
+  isPlanned,
+  children,
+  finished = false,
+}: Props) {
   return (
     <div
       tabIndex={0}
@@ -25,6 +37,11 @@ export function BaseTrainingCard({ trainingType, description, duration, pse, psr
         isPlanned && 'bg-primary-night'
       )}
     >
+      {finished && (
+        <span className='text-background w-full flex justify-end p-0.5'>
+          <CircleCheckBig className='size-7 md:size-5' />
+        </span>
+      )}
       <p className='text-base md:text-xs text-white text-ellipsis line-clamp-1'>
         Tipo: <strong>{typeof trainingType === 'string' ? trainingType : trainingType.name}</strong>.
       </p>

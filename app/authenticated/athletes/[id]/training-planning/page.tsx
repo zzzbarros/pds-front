@@ -45,6 +45,7 @@ export interface BaseTrainingProps {
   pse: number
   description?: string
   load: number
+  finished?: boolean
 }
 
 interface TrainingPlanningProps {
@@ -130,7 +131,6 @@ export default function PlanningPage() {
               <ArrowRight size={16} />
             </button>
           </div>
-
           {isLoading && <Spinner />}
         </div>
         <Button
@@ -160,11 +160,11 @@ export default function PlanningPage() {
                 isCurrentDay && 'bg-gray-100'
               )}
             >
-              <div className='flex gap-2 items-center w-full justify-center relative'>
+              <div className='flex gap-1 items-center w-full justify-center relative'>
                 <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
                 <button
                   data-current-day={isCurrentDay}
-                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/4 animate-in'
+                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
                   onClick={() => {
                     drawer.current?.open(
                       <PlanningForm method='POST' defaultValues={{ date }} onSuccess={drawer.current?.close} />
