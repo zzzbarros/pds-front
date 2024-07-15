@@ -197,7 +197,9 @@ export default function PlanningPage() {
                     {!plannedTraining?.finished && (
                       <Link
                         href={buildingRouteWithId(RouteEnum.CREATE_TRAINING, id as string).concat(
-                          `?date=${plannedTraining.date}&duration=${plannedTraining.duration}&trainingTypeUuid=${
+                          `?planningId=${plannedTraining.id}&date=${plannedTraining.date}&duration=${
+                            plannedTraining.duration
+                          }&trainingTypeUuid=${
                             typeof plannedTraining.trainingType === 'string'
                               ? plannedTraining.trainingType
                               : plannedTraining.trainingType.id

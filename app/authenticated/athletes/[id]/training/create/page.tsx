@@ -43,17 +43,35 @@ export default function CreateTraining() {
         form.setError('serverError', {})
       })
     } else {
+      const finishedPlanning = await finishTrainingPlanning()
       form.reset({})
       const week = getWeekNumberFromDate(data.date)
       router.replace(buildingRouteWithId(RouteEnum.TRAININGS, params.id as string).concat(`?week=${week}`), {
         scroll: true,
       })
+      if (!finishedPlanning)
+        toast({
+          title: res.data.title,
+          description: res.data.message,
+          variant: 'success',
+        })
+    }
+  }
+
+  async function finishTrainingPlanning() {
+    const planningId = query.get('planningId')
+    if (!planningId) return false
+    const res = await clientFetcher(`training-planning/${planningId}/finish`, {
+      method: 'PATCH',
+    })
+    if (res.ok) {
       toast({
         title: res.data.title,
         description: res.data.message,
         variant: 'success',
       })
     }
+    return res.ok
   }
 
   function buildingDefaultValues() {
