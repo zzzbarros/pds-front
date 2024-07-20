@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useMemo } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react'
 import { clientFetcher } from '@/services'
 import { useSWR } from '@/lib/swr'
 import {
@@ -13,6 +13,9 @@ import {
   DailyDurationChart,
   Input,
   Spinner,
+  Alert,
+  AlertTitle,
+  AlertDescription,
 } from '@/components/ui'
 import {
   getCurrentWeekDates,
@@ -48,6 +51,11 @@ interface MonotonyMonitoringResponseDto {
     planned: number[]
     performed: number[]
   }
+  risks: ({
+    title: string
+    description: string
+    warning: boolean
+  } | null)[]
 }
 
 interface GetWellBeingMonitoringResponseDto {
@@ -102,6 +110,7 @@ export default function Monitoring() {
         const defaultValue: number[] = []
         return {
           week: [],
+          risks: [],
           monotony: defaultValue,
           strain: defaultValue,
           acuteChronicLoadRatio: defaultValue,
@@ -210,6 +219,22 @@ export default function Monitoring() {
           Imprimir
         </Button>
       </div>
+      {!!monotonyMonitoring?.risks?.length && (
+        <ul className='flex flex-col gap-2'>
+          {monotonyMonitoring?.risks.map(
+            (risk) =>
+              risk && (
+                <li key={risk.title}>
+                  <Alert className='h-full' {...(risk.warning && { variant: 'destructive' })}>
+                    <AlertCircle size={20} />
+                    <AlertTitle>{risk.title}</AlertTitle>
+                    <AlertDescription>{risk.description}</AlertDescription>
+                  </Alert>
+                </li>
+              )
+          )}
+        </ul>
+      )}
       <WeekLoadChart {...monotonyMonitoring} />
       <DailyLoadChart {...{ labels, psr, pse, plannedTraining, performedTraining }} />
       <DailyDurationChart {...{ labels, pse, plannedPse, duration, plannedDuration }} />

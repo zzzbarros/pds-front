@@ -61,7 +61,16 @@ export default function UpdateTrainingPlanning() {
   }
 
   useLayoutEffect(() => {
-    !!data && form.reset({ ...data, trainingTypeUuid: data.trainingType.id })
+    if (data) {
+      const { date, duration, pse, trainingType, description } = data
+      form.reset({
+        date,
+        duration,
+        pse,
+        trainingTypeUuid: trainingType.id,
+        ...(description !== null && { description }),
+      })
+    }
     return () => {
       form.reset({})
     }
