@@ -20,6 +20,7 @@ import {
   Slider,
   PseScalePopover,
 } from '@/components/ui'
+import { getFirstAndLastDayOfWeek } from '@/lib/dates'
 
 interface Props {
   onSubmit(date: ITrainingPlanningFormProps): void
@@ -72,6 +73,8 @@ export function TrainingPlanningForm({ onSubmit }: Props) {
     return response.data.trainingTypes as { label: string; value: string }[]
   })
 
+  const { firstDay } = getFirstAndLastDayOfWeek(new Date())
+
   return (
     <form
       id='training-planning'
@@ -79,7 +82,7 @@ export function TrainingPlanningForm({ onSubmit }: Props) {
       className='flex flex-col gap-6 text-left h-full w-full sm:w-2/3 md:w-2/5 max-w-xl'
     >
       <div className='flex flex-col gap-4 md:gap-3 h-full'>
-        <DatePicker control={form.control} name='date' label='Data do Treino' />
+        <DatePicker control={form.control} name='date' label='Data do Treino' disabled={(date) => date < firstDay} />
         <FormField
           control={form.control}
           name='trainingTypeUuid'
