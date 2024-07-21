@@ -9,12 +9,12 @@ const privacyPolicy = [
   {
     title: 'Coleta de Informações',
     value:
-      'Coletamos as seguintes informações: nome, e-mail e informações sobre os treinos dos atletas (como percepção de esforço, duração, bem-estar, tipo de treino, etc.).',
+      'Coletamos diversas informações para proporcionar a melhor experiência na nossa plataforma. Isso inclui: seu nome e e-mail; nome e e-mail dos seus atletas; detalhes sobre as sessões de treinamento; planejamento e execução dos treinos; duração total das sessões; percepção subjetiva de esforço; percepção subjetiva de recuperação; e dados sobre o bem-estar dos atletas.',
   },
   {
     title: 'Uso das Informações',
     value:
-      'Utilizamos suas informações para gerenciar sua conta na plataforma, enviar e-mails relacionados à plataforma e melhorar nossos serviços.',
+      'Utilizamos suas informações para gerenciar sua conta na plataforma, gerar os gráficos de monitoramento dos seus atletas, enviar e-mails relacionados à plataforma e melhorar nossos serviços.',
   },
   {
     title: 'Compartilhamento de Informações',
