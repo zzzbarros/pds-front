@@ -43,7 +43,7 @@ const TabsTrigger = React.forwardRef<
         className
       )}
       onClick={(e) => {
-        router.replace(props?.href ? props.href : props?.value)
+        router.push(props?.href ? props.href : props?.value)
         onClick?.(e)
       }}
       {...props}

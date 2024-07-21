@@ -31,7 +31,9 @@ export function TabsComponents({ children }: Props) {
   return (
     <Tabs value={defaultTabByRoute[route]} className='w-full flex flex-col gap-6'>
       <TabsList className='w-full md:w-fit print:hidden'>
-        <TabsTrigger value={TabsEnum.MONITORING}>Monitoramento</TabsTrigger>
+        <TabsTrigger href={buildingRouteWithId(RouteEnum.MONITORY, athleteId)} value={TabsEnum.MONITORING}>
+          Monitoramento
+        </TabsTrigger>
         <TabsTrigger
           href={buildingRouteWithId(RouteEnum.TRAINING_PLANNING, athleteId)}
           value={TabsEnum.TRAINING_PLANNING}
