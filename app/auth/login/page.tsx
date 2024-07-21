@@ -29,14 +29,16 @@ const schema = z
   .object({
     email: z
       .string()
-      .min(2, {
+      .trim()
+      .min(1, {
         message: 'E-mail é obrigatório',
       })
       .email('E-mail inválido')
       .default(''),
     password: z
       .string()
-      .min(2, {
+      .trim()
+      .min(1, {
         message: 'Senha é obrigatório',
       })
       .default(''),

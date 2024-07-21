@@ -152,7 +152,7 @@ export default function RegisterPage() {
               className='mt-1'
             />
             <Label className='text-zinc-700' htmlFor='acceptedTerms'>
-              Eu estou ciente e aceitos os{' '}
+              {'Eu estou ciente e aceitos os '}
               <Link
                 href={RouteEnum.TERMS_OF_USE}
                 className='text-primary font-bold underline hover:text-primary-medium'
@@ -168,7 +168,7 @@ export default function RegisterPage() {
               >
                 Políticas de Privacidade
               </Link>
-              .
+              {'.'}
             </Label>
           </fieldset>
           <Button

@@ -12,4 +12,10 @@ function password(password: string) {
   return password
 }
 
-export const validator = { password }
+function name(name: string) {
+  if (!/\s+/.test(name)) return false
+  if (name.split(' ').length < 2) false
+  return name
+}
+
+export const validator = { password, name }
