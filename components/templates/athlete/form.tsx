@@ -1,3 +1,5 @@
+'use client'
+
 import { z } from 'zod'
 import { useFormContext } from 'react-hook-form'
 import { DatePicker, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@/components/ui'
