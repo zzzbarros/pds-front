@@ -30,7 +30,7 @@ const schema = z
       .string()
       .trim()
       .min(1, {
-        message: 'Nome é obrigatório',
+        message: 'Nome completo é obrigatório',
       })
       .min(4, {
         message: 'Nome deve ter no mínimo 4 caracteres.',
