@@ -45,9 +45,9 @@ export default function Unsubscribe(props: IPageProps) {
           Você tem certeza que deseja cancelar a inscrição?
         </h1>
         <div className='w-full flex justify-center'>
-          <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium w-full md:w-2/4 text-balance'>
-            Caso cancele a inscrição você não recebera mais nenhum e-mail de monitoramento.{' '}
-            <strong>Essa ação não poderá ser desfeita!</strong>
+          <p className='text-xl md:text-lg mt-[6px] mb-6 text-zinc-600 font-medium w-full md:w-3/4 text-balance'>
+            Caso cancele a inscrição, você não receberá mais nenhum E-mail de monitoramento.
+            <strong> Essa ação não poderá ser desfeita!</strong>
           </p>
         </div>
         <p className='mb-8 text-lg'>

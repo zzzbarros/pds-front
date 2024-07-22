@@ -136,3 +136,30 @@ function getWeeksInYear(year: number): number {
   const daysDifference = (decemberThirtyFirst.getTime() - januaryFirst.getTime()) / (1000 * 60 * 60 * 24)
   return Math.ceil((daysDifference + januaryFirst.getDay() + 1) / 7)
 }
+
+/**
+ * Função para obter o primeiro e o último dia da semana de uma data fornecida.
+ * @param date A data de referência.
+ * @returns Um objeto contendo o primeiro e o último dia da semana.
+ */
+export function getFirstAndLastDayOfWeek(date: Date): {
+  firstDay: Date;
+  lastDay: Date;
+  week: string;
+} {
+  const inputDate = new Date(date);
+  const dayOfWeek = inputDate.getDay(); // Domingo = 0, Segunda = 1, ..., Sábado = 6
+
+  // Considerando que a semana começa no domingo
+  const differenceToSunday = dayOfWeek; // Diferença de dias até domingo
+
+  const firstDay = new Date(inputDate);
+  firstDay.setDate(inputDate.getDate() - differenceToSunday);
+  firstDay.setHours(0, 0, 0, 0); // Zera horas, minutos, segundos e milissegundos
+
+  const lastDay = new Date(firstDay);
+  lastDay.setDate(firstDay.getDate() + 6);
+  lastDay.setHours(23, 59, 59, 999); // Define o final do dia
+
+  return { firstDay, lastDay, week: getWeekNumberFromDate(inputDate) };
+}

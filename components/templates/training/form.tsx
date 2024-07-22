@@ -111,7 +111,7 @@ export function TrainingForm({ onSubmit }: Props) {
                       </SelectItem>
                     ))}
                     {!trainingTypes.length && (
-                      <span className='px-2  text-lg md:text-sm '>Nenhuma opção encontrada...</span>
+                      <span className='px-2 text-lg md:text-sm '>Nenhuma opção encontrada...</span>
                     )}
                   </SelectContent>
                 </Select>

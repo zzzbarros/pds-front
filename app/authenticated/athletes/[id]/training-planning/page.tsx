@@ -31,6 +31,7 @@ import {
   getWeekDatesFromInput,
   getWeekNumberFromDate,
   buildingRouteWithId,
+  getFirstAndLastDayOfWeek,
 } from '@/lib/utils'
 import { TrainingCard } from './components'
 import { useDrawerContext } from '@/contexts'
@@ -74,6 +75,7 @@ export default function PlanningPage() {
   const weekDates = week ? getWeekDatesFromInput(week) : getCurrentWeekDates()
   const { drawer } = useDrawerContext()
 
+  const currentWeek = getFirstAndLastDayOfWeek(new Date())
   const firstDayOfWeek = weekDates[0]
   const lastDayOfWeek = weekDates[6]
 
@@ -161,13 +163,15 @@ export default function PlanningPage() {
             >
               <div className='flex gap-1 items-center w-full justify-center relative'>
                 <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
-                <Link
-                  data-current-day={isCurrentDay}
-                  href={buildingRouteWithId(RouteEnum.CREATE_TRAINING_PLANNING, id as string).concat(`?date=${date}`)}
-                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
-                >
-                  <Plus size={14} />
-                </Link>
+                {date >= currentWeek.firstDay && (
+                  <Link
+                    data-current-day={isCurrentDay}
+                    href={buildingRouteWithId(RouteEnum.CREATE_TRAINING_PLANNING, id as string).concat(`?date=${date}`)}
+                    className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
+                  >
+                    <Plus size={14} />
+                  </Link>
+                )}
               </div>
               <p className='text-lg md:text-base font-medium'>{textDay}</p>
               <ul className='w-full mt-6 flex flex-col gap-1 px-1'>

@@ -16,4 +16,6 @@ export enum RouteEnum {
   CREATE_TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning/create',
   UPDATE_TRAINING_PLANNING = '/authenticated/athletes/:ID/training-planning/:CHILD_ID/update',
   TRAINING_TYPES = '/authenticated/training-types',
+  TERMS_OF_USE = '/terms-of-use',
+  PRIVACY_POLICY = '/privacy-policy',
 }

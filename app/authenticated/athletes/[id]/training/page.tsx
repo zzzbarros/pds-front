@@ -1,8 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { useMemo, type ChangeEvent } from 'react'
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Info, Plus, Route, Trash } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CircleCheckBig, Edit, Info, Plus, Trash } from 'lucide-react'
 import { useSWR } from '@/lib/swr'
 import { clientFetcher } from '@/services'
 import {
@@ -33,9 +34,8 @@ import {
   getWeekNumberFromDate,
   buildingRouteWithId,
 } from '@/lib/utils'
-import { useDialogContext, useDrawerContext } from '@/contexts'
+import { useDialogContext } from '@/contexts'
 import { ConfirmDeleteDialog } from '@/components/compositions'
-import Link from 'next/link'
 import { RouteEnum } from '@/enums'
 
 interface TrainingProps {
@@ -82,9 +82,7 @@ export default function PlanningPage() {
   const week = searchParams.get('week') ?? getWeekNumberFromDate(currentDay)
   const weekDates = getWeekDatesFromInput(week)
   const showPlannedTrainings = (searchParams.get('showPlannedTrainings') || 'true') === 'true'
-  const { drawer } = useDrawerContext()
   const { dialog } = useDialogContext()
-
   const firstDayOfWeek = weekDates[0]
   const lastDayOfWeek = weekDates[6]
 
@@ -100,22 +98,21 @@ export default function PlanningPage() {
     return response.data as TrainingsProps
   })
 
-  const {
-    data: plannedData,
-    isLoading: isLoadingPlanning,
-    mutate: mutatePlanning,
-  } = useSWR(['planned-training', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings], async () => {
-    if (!showPlannedTrainings) {
-      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+  const { data: plannedData, isLoading: isLoadingPlanning } = useSWR(
+    ['planned-training', firstDayOfWeek, lastDayOfWeek, id, showPlannedTrainings],
+    async () => {
+      if (!showPlannedTrainings) {
+        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+      }
+      const response = await clientFetcher(
+        `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
+      )
+      if (!response.ok) {
+        return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
+      }
+      return response.data as TrainingPlanningProps
     }
-    const response = await clientFetcher(
-      `training-planning?startDate=${firstDayOfWeek.toISOString()}&endDate=${lastDayOfWeek.toISOString()}&athleteUuid=${id}`
-    )
-    if (!response.ok) {
-      return { trainingPlanning: [] as TrainingPlanningProps['trainingPlanning'] } as TrainingPlanningProps
-    }
-    return response.data as TrainingPlanningProps
-  })
+  )
 
   const weekTrainings = trainingData?.trainings ?? []
   const weekPlannedTrainings = plannedData?.trainingPlanning ?? []
@@ -145,24 +142,6 @@ export default function PlanningPage() {
     router.push(pathname.concat('?').concat(params.toString()))
   }
 
-  async function finishTrainingPlanned(id: string) {
-    const res = await clientFetcher('training-planning/'.concat(id), {
-      method: 'PATCH',
-    })
-    if (res.ok) {
-      mutatePlanning(
-        {
-          ...plannedData!!,
-          trainingPlanning: weekPlannedTrainings?.map((t) => {
-            if (t.id !== id) return t
-            return { ...t, finished: true }
-          }),
-        },
-        { revalidate: false }
-      )
-    }
-  }
-
   const cards = useMemo(
     () =>
       weekDates?.map((date) => {
@@ -181,20 +160,22 @@ export default function PlanningPage() {
           >
             <div className='flex gap-2 items-center w-full justify-center relative'>
               <p className='text-2xl md:text-xl text-slate-950 font-semibold relative'>{day}</p>
-              <Link
-                data-current-day={isCurrentDay}
-                href={buildingRouteWithId(RouteEnum.CREATE_TRAINING, id as string).concat(`?date=${date}`)}
-                className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
-              >
-                <Plus size={14} />
-              </Link>
+              {date <= currentDay && (
+                <Link
+                  data-current-day={isCurrentDay}
+                  href={buildingRouteWithId(RouteEnum.CREATE_TRAINING, id as string).concat(`?date=${date}`)}
+                  className='hidden group-hover:flex p-1 bg-zinc-100 data-[current-day=true]:bg-background hover:brightness-90 rounded-full absolute right-1/3 sm:right-[40vw] md:right-1/4 animate-in'
+                >
+                  <Plus size={14} />
+                </Link>
+              )}
             </div>
             <p className='text-lg md:text-base font-medium'>{textDay}</p>
             <ul className='w-full mt-6 flex flex-col gap-1 px-1'>
               {plannedTrainings?.map((plannedTraining) => (
                 <li key={plannedTraining.id}>
                   <BaseTrainingCard {...plannedTraining} isPlanned>
-                    {!plannedTraining?.finished && (
+                    {!plannedTraining?.finished && new Date(plannedTraining.date) <= currentDay && (
                       <Link
                         href={buildingRouteWithId(RouteEnum.CREATE_TRAINING, id as string).concat(
                           `?planningId=${plannedTraining.id}&date=${plannedTraining.date}&duration=${
