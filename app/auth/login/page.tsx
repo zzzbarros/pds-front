@@ -74,13 +74,13 @@ export default function LoginPage() {
       router.refresh()
     } else {
       form.setError('serverError', {})
-      if (res?.data?.title && res?.data?.message) {
-        toast({
-          title: res.data.title,
-          description: res.data.message,
-          variant: 'destructive',
-        })
-      }
+      const title = res?.data?.title ?? 'Credenciais inválidas'
+      const description = res?.data?.message ?? 'Verifique os dados e tente novamente...'
+      toast({
+        title,
+        description,
+        variant: 'destructive',
+      })
     }
   }
 
